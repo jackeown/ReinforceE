@@ -43,24 +43,24 @@ VBT_CPU_LIMIT_MODEL_STR =      f"--soft_cpu_limit={VBT_CPU_LIMIT+15} --cpu_limit
 # mem_size=20
 mem_size=1
 state_dim = mem_size*5
-# dissertation settings...
+# old settings...
 # common_flags = f"--num_workers=6 --entropy_weight=2e-6 --max_blame=6000 --lr=3e-6 --n_layers=3 --n_units=100 --epochs=1 --batch_size=8 --ppo_batch_size=512 --LAMBDA=0.96 --state_dim={state_dim}"
 
-common_flags = f"--num_workers=11 --entropy_weight=3e-6 --max_blame=10000 --lr=1e-4 --n_layers=2 --n_units=100 --epochs=1 --batch_size=10 --ppo_batch_size=512 --LAMBDA=0.987 --state_dim={state_dim}"
-# used 4e-6 for the NN stuff
+# modelled after local testing on MPTPTP2078
+common_flags = f"--num_workers=8 --entropy_weight=0.006 --max_blame=10000 --lr=1e-3 --n_layers=2 --n_units=100 --epochs=1 --batch_size=5 --ppo_batch_size=64 --LAMBDA=0.987 --discount_factor=0.998 --state_dim={state_dim} --max_grad_norm=4.0"
 
 TMP_CPU_LIMIT_MODEL_STR = "--soft_cpu_limit=5 --cpu_limit=10"
 
 train_experiments = [
     # Neural Nets
-    # f'python tmux_magic_main.py --main_args="{common_flags} {SLH_CPU_LIMIT_MODEL_STR} --max_train_steps=2000 --policy_type=nn --eprover_path=eprover_RL-ho_HIST_1 {SLHStratFile} --auto" {SLHPath} SLHNN1Hist',
-    f'python tmux_magic_main.py --main_args="{common_flags} {MPT_CPU_LIMIT_MODEL_STR} --max_train_steps=2000 --policy_type=nn --eprover_path=eprover_RL_HIST_1 {MPTPStratFile} --auto" {MPTPPath} MPTNN1Hist',
-    f'python tmux_magic_main.py --main_args="{common_flags} {VBT_CPU_LIMIT_MODEL_STR} --max_train_steps=2000 --policy_type=nn --eprover_path=eprover_RL_HIST_1 {VBTStratFile} --auto" {VBTPath} VBTNN1Hist',
+    f'python tmux_magic_main.py --main_args="{common_flags} {SLH_CPU_LIMIT_MODEL_STR} --policy_type=nn --eprover_path=eprover_RL-ho_HIST_1 {SLHStratFile} --auto" {SLHPath} SLHNN1Hist',
+    f'python tmux_magic_main.py --main_args="{common_flags} {MPT_CPU_LIMIT_MODEL_STR} --policy_type=nn --eprover_path=eprover_RL_HIST_1 {MPTPStratFile} --auto" {MPTPPath} MPTNN1Hist',
+    f'python tmux_magic_main.py --main_args="{common_flags} {VBT_CPU_LIMIT_MODEL_STR} --policy_type=nn --eprover_path=eprover_RL_HIST_1 {VBTStratFile} --auto" {VBTPath} VBTNN1Hist',
 
     # Constant Categorical Distribution
-    # f'python tmux_magic_main.py --main_args="{common_flags} {VBT_CPU_LIMIT_MODEL_STR} --max_train_steps=1200 --policy_type=constcat --eprover_path=eprover_RL_HIST_1 {VBTStratFile} --auto" {VBTPath} VBTConstCat1Hist',
-    # f'python tmux_magic_main.py --main_args="{common_flags} {SLH_CPU_LIMIT_MODEL_STR} --max_train_steps=1200 --policy_type=constcat --eprover_path=eprover_RL-ho_HIST_1 {SLHStratFile} --auto" {SLHPath} SLHConstCat1Hist',
-    # f'python tmux_magic_main.py --main_args="{common_flags} {MPT_CPU_LIMIT_MODEL_STR} --max_train_steps=1200 --policy_type=constcat --eprover_path=eprover_RL_HIST_1 {MPTPStratFile} --auto" {MPTPPath} MPTConstCat1Hist',
+    f'python tmux_magic_main.py --main_args="{common_flags} {VBT_CPU_LIMIT_MODEL_STR} --policy_type=constcat --eprover_path=eprover_RL_HIST_1 {VBTStratFile} --auto" {VBTPath} VBTConstCat1Hist',
+    f'python tmux_magic_main.py --main_args="{common_flags} {SLH_CPU_LIMIT_MODEL_STR} --policy_type=constcat --eprover_path=eprover_RL-ho_HIST_1 {SLHStratFile} --auto" {SLHPath} SLHConstCat1Hist',
+    f'python tmux_magic_main.py --main_args="{common_flags} {MPT_CPU_LIMIT_MODEL_STR} --policy_type=constcat --eprover_path=eprover_RL_HIST_1 {MPTPStratFile} --auto" {MPTPPath} MPTConstCat1Hist',
 ]
 
 test_experiments = [
@@ -94,9 +94,9 @@ test_experiments = [
     # f'python tmux_magic_main.py --main_args="{common_flags} {MPT_CPU_LIMIT_STR} --auto {MPTP_CommonHeuristic_StratDir} --policy_type=none --eprover_path=eprover --test_num=1" {MPTPPath} MPTCommonHeuristic --test',
     # f'python tmux_magic_main.py --main_args="{common_flags} {SLH_CPU_LIMIT_STR} --auto {SLH_CommonHeuristic_StratDir} --policy_type=none --eprover_path=eprover-ho --test_num=1" {SLHPath} SLHCommonHeuristic --test',
 
-    f'python tmux_magic_main.py --main_args="{common_flags} {VBT_CPU_LIMIT_STR} --auto {VBT_CommonElse_StratDir} --policy_type=none --eprover_path=eprover --test_num=1" {VBTPath} VBTCommonElse --test',
-    f'python tmux_magic_main.py --main_args="{common_flags} {MPT_CPU_LIMIT_STR} --auto {MPTP_CommonElse_StratDir} --policy_type=none --eprover_path=eprover --test_num=1" {MPTPPath} MPTCommonElse --test',
-    f'python tmux_magic_main.py --main_args="{common_flags} {SLH_CPU_LIMIT_STR} --auto {SLH_CommonElse_StratDir} --policy_type=none --eprover_path=eprover-ho --test_num=1" {SLHPath} SLHCommonElse --test',
+    # f'python tmux_magic_main.py --main_args="{common_flags} {VBT_CPU_LIMIT_STR} --auto {VBT_CommonElse_StratDir} --policy_type=none --eprover_path=eprover --test_num=1" {VBTPath} VBTCommonElse --test',
+    # f'python tmux_magic_main.py --main_args="{common_flags} {MPT_CPU_LIMIT_STR} --auto {MPTP_CommonElse_StratDir} --policy_type=none --eprover_path=eprover --test_num=1" {MPTPPath} MPTCommonElse --test',
+    # f'python tmux_magic_main.py --main_args="{common_flags} {SLH_CPU_LIMIT_STR} --auto {SLH_CommonElse_StratDir} --policy_type=none --eprover_path=eprover-ho --test_num=1" {SLHPath} SLHCommonElse --test',
 
 ]
 
@@ -125,8 +125,8 @@ distill_experiments = []
 #     ]
 
 # experiments_to_run = train_experiments + test_experiments + distill_experiments
-# experiments_to_run = train_experiments
-experiments_to_run = test_experiments
+experiments_to_run = train_experiments
+# experiments_to_run = test_experiments
 
 # Check that CPU is not too busy
 def too_busy(percent):
