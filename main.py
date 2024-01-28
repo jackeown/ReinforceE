@@ -520,7 +520,7 @@ def makeRunner(policy, args):
     if args.lunar_lander:
         runner = functools.partial(runLunarLander, policy)
     else:
-        runner = functools.partial(runE, policy, args.eprover_path, state_dim=args.state_dim, strat_file=args.strat_file, soft_cpu_limit=args.soft_cpu_limit, cpu_limit=args.cpu_limit, auto=args.auto)
+        runner = functools.partial(runE, policy, args.eprover_path, state_dim=args.state_dim, strat_file=args.strat_file, soft_cpu_limit=args.soft_cpu_limit, cpu_limit=args.cpu_limit, auto=args.auto, verbose=args.verbose)
     return runner
     
 
@@ -962,6 +962,7 @@ if __name__ == "__main__":
     parser.add_argument("--run", default="test")
     parser.add_argument("--test", action="store_true")
     parser.add_argument("--test_num", type=int, default=10)
+    parser.add_argument("--verbose", action="store_true", help='used in runE')
     parser.add_argument("--lunar_lander", action="store_true")
     parser.add_argument("--auto", action="store_true")
     parser.add_argument("--auto_sched", action="store_true")
