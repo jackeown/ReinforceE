@@ -10,6 +10,7 @@ from glob import glob
 
 
 def saveToDir(path, thing, prefix=''):
+    print("Fake SaveToDir")
     return # for disabling 
     if prefix != '':
         prefix = prefix + '_'

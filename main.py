@@ -456,15 +456,18 @@ def sendInfoAndEpisode(proc, profiler, info_queue, episode_queue, message_queue,
     # Only send episode to trainer if it is legit.
     else:
         # returns = calculateReturns(policy, ep, False, dummyProfiler, numpy=True, discount_factor=args.discount_factor)
+        print("Calculating returns...")
         with profiler.profile("<g> calculateReturns"):
             returnsAdvProbsAndVals = calculateReturnsAndAdvantageEstimate(policyModule, ep, GAMMA=args.discount_factor, LAMBDA=args.LAMBDA, lunarLander=args.lunar_lander)
         modified_ep = Episode(ep.problem, ep.states, ep.actions, returnsAdvProbsAndVals, policy)
+        print("After Calculating returns...")
 
         saveToDir("./debugging", modified_ep, prefix="ep")
 
         modified_ep = applyMaxBlame(modified_ep, args.max_blame)
 
         episode_read.value = False
+        print("Sending episode...")
         episode_queue.put((info['solved'], modified_ep))
 
         while not episode_read.value:
@@ -805,7 +808,7 @@ def TrainPolicy(problems, args):
     numSuccess = 0
     numFailure = 0
     while not stop_event.value:
-        print("AAA\n"*100)
+        # print("AAA\n"*100)
         if gather_info_queue.qsize() > 0:
             info = gather_info_queue.get()
             if info['solved']:
@@ -822,7 +825,7 @@ def TrainPolicy(problems, args):
             dashboard.updatePresatInfo(presat_info_queue.get())
 
         while train_info_queue.qsize() > 0:
-            print("Line 825 ...")
+            print("Line 825 ..." + "#"*1000)
             worked = False
             try:
                 opt, policy, loss = train_info_queue.get()
@@ -850,7 +853,7 @@ def TrainPolicy(problems, args):
             "Profiler Queue: ": profiler_queue.qsize()
         }
 
-        print(sizes)
+        # print(sizes)
         dashboard.updateQueueInfo(sizes)
 
         while profiler_queue.qsize() > 0:
