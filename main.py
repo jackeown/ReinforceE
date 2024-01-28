@@ -540,7 +540,7 @@ def waitForLearner(profiler, episode_queue, message_queue, processes, sentCount)
         while episode_queue.qsize() > 10 or criteria(unsentProcs):
             unready_procs = [x for x in unsentProcs if not x.ready()]
             message = f"Sleeping for {dt} seconds for the {i}th time...Waiting...{len(unready_procs)} unready but enqueued episodes and {episode_queue.qsize()} episodes in queue."
-            message += f"\unsent Procs: {[x.ready() for x in unsentProcs]}"
+            message += f"\n Unsent Procs: {[x.ready() for x in unsentProcs]}"
             message_queue.put(message)
             sleep(dt)
             
