@@ -509,8 +509,8 @@ class PolicyNet(nn.Module):
 
         if states.shape[-1] > 5:
             states = self.preprocess(states)
-            
-        print(states)
+
+        # print(states)
 
         first = self.input(self.inputDropout(states))
         # first = self.input(states)
