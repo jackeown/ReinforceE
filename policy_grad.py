@@ -436,15 +436,15 @@ class PolicyNetRoundRobin(nn.Module):
 
 class PolicyNet(nn.Module):
 
-    def __init__(self, inDim, midDim, outDim, numHidden, dropoutProb=0.02):
+    def __init__(self, inDim, midDim, outDim, numHidden, dropoutProb=0.03):
         super().__init__()
 
         # only the history of actions as a sum of scaled one-hots: see preprocess method
         self.stateSize = inDim
         self.numActions = outDim
 
-        # newIndim = inDim
-        newIndim = 5 + outDim
+        newIndim = inDim if inDim <= 5 else 5 + outDim
+        # newIndim = 5 + outDim
 
         self.inputDropout = nn.Dropout(dropoutProb)
         self.input = nn.Linear(newIndim, midDim)
@@ -506,7 +506,11 @@ class PolicyNet(nn.Module):
 
 
     def forward(self, states):
-        states = self.preprocess(states)
+
+        if states.shape[-1] > 5:
+            states = self.preprocess(states)
+            
+        print(states)
 
         first = self.input(self.inputDropout(states))
         # first = self.input(states)
