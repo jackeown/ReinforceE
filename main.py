@@ -699,14 +699,18 @@ def train_policy_process(policy, opt, episode_queue, policy_queue, info_queue, k
     os.makedirs(model_history_dir, exist_ok=True)
 
     while keepTraining(train_policy_process.everSolved, batches_processed,  args.train_patience, args.max_train_steps, keep_training_queue):
+        print(f"train main loop {i}")
         i += 1
         message_queue.put(f"train main loop {i}")
 
         with profiler.profile("<t> entire while body"):
 
+            print("About to wait for an episode...")
             addEpisodeToBatch(profiler, waitForEpisode(profiler, episode_queue, message_queue, episode_read), batch, message_queue)
+            print(f"Got the episode... added to batch. Currently at {len(batch)} episodes")
 
             if len(batch) >= args.batch_size:
+                print(f"About to optimize step for {len(batch)} episodes")
                 with profiler.profile("<t> Optimize_step"):
                     unzipped = [torch.cat(X, dim=0) for X in zip(*batch)]
                     rollout_buffer = list(zip(*unzipped))
@@ -716,6 +720,8 @@ def train_policy_process(policy, opt, episode_queue, policy_queue, info_queue, k
                         clonePolicy(policy),
                         optimize_step_ppo(opt, policy, rollout_buffer, args.ppo_batch_size, args.critic_weight, args.entropy_weight, args.max_grad_norm, args.epochs)
                     ))
+                    
+                print("After optimize step...")
 
                 model_iteration += 1
                 torch.save(policy, f"{model_history_dir}/{model_iteration:05d}.pt")
@@ -855,6 +861,7 @@ def TrainPolicy(problems, args):
             
             if dead:
                 print(f"The following processes died: {dead}")
+                print(("#"*100 + '\n')*15)
                 sys.exit()
 
 

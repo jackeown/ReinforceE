@@ -47,7 +47,7 @@ state_dim = mem_size*5
 # common_flags = f"--num_workers=6 --entropy_weight=2e-6 --max_blame=6000 --lr=3e-6 --n_layers=3 --n_units=100 --epochs=1 --batch_size=8 --ppo_batch_size=512 --LAMBDA=0.96 --state_dim={state_dim}"
 
 # modelled after local testing on MPTPTP2078
-common_flags = f"--num_workers=8 --entropy_weight=0.006 --max_blame=10000 --lr=1e-3 --n_layers=2 --n_units=100 --epochs=1 --batch_size=5 --ppo_batch_size=64 --LAMBDA=0.987 --discount_factor=0.998 --state_dim={state_dim} --max_grad_norm=4.0"
+common_flags = f"--num_workers=6 --entropy_weight=0.006 --max_blame=50000 --lr=1e-3 --n_layers=2 --n_units=100 --epochs=1 --batch_size=5 --ppo_batch_size=64 --LAMBDA=0.987 --discount_factor=0.998 --state_dim={state_dim}"
 
 TMP_CPU_LIMIT_MODEL_STR = "--soft_cpu_limit=5 --cpu_limit=10"
 
@@ -148,7 +148,7 @@ def runExperiment(exp):
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser()
-    parser.add_argument("--cpu_threshold", type=float, default=27.0)
+    parser.add_argument("--cpu_threshold", type=float, default=20.0)
     parser.add_argument("--dry_run", action="store_true")
     args = parser.parse_args()
 
