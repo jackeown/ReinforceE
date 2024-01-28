@@ -560,8 +560,8 @@ def waitForLearner(profiler, episode_queue, message_queue, processes, sentCount)
                     sleepTimes[i] = 0
 
             for i in range(len(sleepTimes) - 1, -1, -1):  # Iterate in reverse to avoid index errors
-                if sleepTimes[i] > 100*(1/dt):
-                    message_queue.put(f"We've waited 100 seconds for process {sentCount + i}. Aborting.")
+                if sleepTimes[i] > 150*(1/dt):
+                    message_queue.put(f"We've waited 150 seconds for process {sentCount + i}. Aborting.")
                     
                     # Remove ith element from unsentProcs
                     del unsentProcs[i]
