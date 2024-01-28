@@ -324,6 +324,7 @@ def runE(policy, eproverPath, problemPath, state_dim=5, soft_cpu_limit=1, cpu_li
     if verbose:
         print_dumb("About to print stdout/stderr...")
         print_dumb(stdout,stderr)
+        print_dumb("The above was stdout / stderr...")
 
     # clean up pipes:
     os.remove(f"/tmp/StatePipe{workerId}")
@@ -332,7 +333,12 @@ def runE(policy, eproverPath, problemPath, state_dim=5, soft_cpu_limit=1, cpu_li
 
     # Extract important info from E's stdout/stderr
     if create_info:
-        return createInfoFromE(stdout,stderr, problemName, t1, t2, clonePolicy(policy))
+        if verbose:
+            print_dumb("About to create info...")
+        info = createInfoFromE(stdout,stderr, problemName, t1, t2, clonePolicy(policy))
+        if verbose:
+            print_dumb("Created info!")
+        return 
     else:
         return stdout,stderr
 
