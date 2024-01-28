@@ -459,7 +459,9 @@ class PolicyNet(nn.Module):
         # self.critic = lambda s, x: c(s.preprocess(x))
 
     def critic(self, x):
-        return self.c(self.preprocess(x))
+        if x.shape[-1] > 5:
+            x = self.preprocess(x)
+        return self.c(x)
         
 
     def preprocess(self, s, verbose=False):
