@@ -606,6 +606,8 @@ def gather_episodes_process(policy_queue, problems, episode_queue, info_queue, m
 
 def keepTraining(everSolved, batches_processed, patience=5*2078, max_train_steps=1e6, keep_training_queue=None):
 
+    print("Checking if training should be stopped...")
+    
     if batches_processed > max_train_steps:
         return False
 
@@ -643,6 +645,7 @@ def waitForEpisode(profiler, episode_queue, message_queue, episode_read):
         while episode_queue.qsize() < 1:
             i+=1
             if i%10 == 0:
+                print("trainer Waiting for episode", end='', flush=True)
                 message_queue.put("Trainer waiting for episodes...")
                 
             sleep(0.1)
@@ -720,7 +723,7 @@ def train_policy_process(policy, opt, episode_queue, policy_queue, info_queue, k
                         clonePolicy(policy),
                         optimize_step_ppo(opt, policy, rollout_buffer, args.ppo_batch_size, args.critic_weight, args.entropy_weight, args.max_grad_norm, args.epochs)
                     ))
-                    
+
                 print("After optimize step...")
 
                 model_iteration += 1
@@ -732,6 +735,8 @@ def train_policy_process(policy, opt, episode_queue, policy_queue, info_queue, k
         profiler_queue.put(profiler.copy())
         profiler.reset()
     
+
+    print("###################################\n"*20)
     print(f"Finished Training: total batches processed / train steps: {batches_processed}")
 
     stop_event.value = True
