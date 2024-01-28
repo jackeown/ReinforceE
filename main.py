@@ -607,7 +607,7 @@ def gather_episodes_process(policy_queue, problems, episode_queue, info_queue, m
 def keepTraining(everSolved, batches_processed, patience=5*2078, max_train_steps=1e6, keep_training_queue=None):
 
     print("Checking if training should be stopped...")
-    
+
     if batches_processed > max_train_steps:
         return False
 
@@ -805,6 +805,7 @@ def TrainPolicy(problems, args):
     numSuccess = 0
     numFailure = 0
     while not stop_event.value:
+        print("AAA\n"*100)
         if gather_info_queue.qsize() > 0:
             info = gather_info_queue.get()
             if info['solved']:
@@ -821,6 +822,7 @@ def TrainPolicy(problems, args):
             dashboard.updatePresatInfo(presat_info_queue.get())
 
         while train_info_queue.qsize() > 0:
+            print("Line 825 ...")
             worked = False
             try:
                 opt, policy, loss = train_info_queue.get()
@@ -836,7 +838,8 @@ def TrainPolicy(problems, args):
         if message_queue.qsize() > 0:
             dashboard.addMessage(message_queue.get())
 
-        dashboard.updateQueueInfo({
+
+        sizes = {
             "Episode Queue: ": episode_queue.qsize(),
             "Policy Queue: ": policy_queue.qsize(),
             "Gather_Info Queue: ": gather_info_queue.qsize(),
@@ -845,7 +848,10 @@ def TrainPolicy(problems, args):
             "Message Queue: ": message_queue.qsize(),
             "Presat info Queue: ": presat_info_queue.qsize(),
             "Profiler Queue: ": profiler_queue.qsize()
-        })
+        }
+
+        print(sizes)
+        dashboard.updateQueueInfo(sizes)
 
         while profiler_queue.qsize() > 0:
             dashboard.updateProfiler(profiler_queue.get())
