@@ -989,7 +989,7 @@ if __name__ == "__main__":
     parser.add_argument("--load_model", action="store_true")
     parser.add_argument("--model_path", default="latest_model.pt")
     parser.add_argument("--opt_path", default="latest_model_opt.pt")
-    parser.add_argument("--opt_type", default="adagrad", choices=["adam", "sgd", "rmsprop", "adagrad"])
+    parser.add_argument("--opt_type", default="adam", choices=["adam", "sgd", "rmsprop", "adagrad"])
     parser.add_argument("--policy_type", default="nn", choices=["nn", "constcat", "none", "uniform", "attn"])
     
     parser.add_argument("--state_dim", type=int, default=5)
