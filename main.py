@@ -338,7 +338,7 @@ def runE(policy, eproverPath, problemPath, state_dim=5, soft_cpu_limit=1, cpu_li
         info = createInfoFromE(stdout,stderr, problemName, t1, t2, clonePolicy(policy))
         if verbose:
             print_dumb("Created info!")
-        return 
+        return info
     else:
         return stdout,stderr
 
