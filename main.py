@@ -914,6 +914,8 @@ def EvaluatePolicy(policy, problems, args):
     # else:
     #     runner = functools.partial(runE, policy, args.eprover_path, state_dim=args.state_dim, strat_file=args.strat_file, auto=args.auto, auto_sched=args.auto_sched, soft_cpu_limit=args.soft_cpu_limit, cpu_limit=args.cpu_limit)
 
+
+
     t1 = time()
     print("Evaluating...")
     probsSolved = 0
@@ -935,9 +937,10 @@ def EvaluatePolicy(policy, problems, args):
                 
                 print(f"{probsSolved} / {j+1} ({probsSolved / (j+1):.2%})") # what percent solved?
 
-
                 history.addInfo(info)
                 history.save(f"{args.run}", None, eager=False)
+
+
 
     print(f"Number of Problems Solved (average over {args.test_num} runs): {probsSolved / args.test_num} / {len(problems)}")
     return history
