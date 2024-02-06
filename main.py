@@ -551,6 +551,8 @@ def waitForLearner(profiler, episode_queue, message_queue, processes, sentCount)
             message += f"\n Unsent Procs: {''.join(['1' if x.ready() else '0' for x in unsentProcs])}"
             message += f"\n sleepTimes: {sleepTimes}"
             message_queue.put(message)
+            if random.random() < dt:
+                print(message)
             sleep(dt)
             
             for i,proc in enumerate(unsentProcs):
@@ -561,14 +563,18 @@ def waitForLearner(profiler, episode_queue, message_queue, processes, sentCount)
 
             for i in range(len(sleepTimes) - 1, -1, -1):  # Iterate in reverse to avoid index errors
                 if sleepTimes[i] > 150*(1/dt):
-                    message_queue.put(f"We've waited 150 seconds for process {sentCount + i}. Aborting.")
+                    message = f"We've waited 150 seconds for process {sentCount + i}. Aborting."
+                    message_queue.put(message)
+                    print(message)
                     
                     # Remove ith element from unsentProcs
                     del unsentProcs[i]
                     del processes[sentCount + i]
                     del sleepTimes[i]  # Also remove the corresponding sleep time entry
                     
-                    message_queue.put(f"Process {sentCount+i} removed. Remaining processes: {len(unsentProcs)}")
+                    message = f"Process {sentCount + i} removed. Remaining processes: {len(unsentProcs)}"
+                    message_queue.put(message)
+                    print(message)
 
                     
 
@@ -892,12 +898,20 @@ def TrainPolicy(problems, args):
 
         dashboard.render(save=f"./dashboards/{args.run}.txt")
 
-    gatherProc.join()
-    trainProc.join()
+    gatherProc.join(timeout=5)
+    gatherProc.kill()
+    print("Finished gatherer...")
+
+    trainProc.join(timeout=5)
+    trainProc.kill()
+    print("Finished trainer...")
+
 
     history.save(f"{args.run}_train", None, eager=True)
     torch.save(policy, args.model_path)
     torch.save(opt.state_dict(), args.opt_path)
+
+    print("TrainPolicy done.")
 
     return history
 TrainPolicy.lastSaved = 0
@@ -1007,7 +1021,7 @@ if __name__ == "__main__":
     parser.add_argument("--cpu_limit", type=int, default=2)
 
     parser.add_argument("--train_patience", type=int, default=10*2078, help="How many proof attempts to wait for another solved problem before stopping training.")
-    parser.add_argument("--max_train_steps", default=2_000_000, type=int, help="Maximum number of PPO train batches to train on.")
+    parser.add_argument("--max_train_steps", default=4500, type=int, help="Maximum number of PPO train batches to train on.") # 4500 ~= 11*2078 / 5 batches: decided from how many MPT epochs before no new probs solved
     parser.add_argument("--seed", type=int, default=0)
     args = parser.parse_args()
 
@@ -1044,5 +1058,6 @@ if __name__ == "__main__":
     else:
         history = TrainPolicy(problems, args)
         p.terminate()
-        IPython.embed()
+        sys.exit()
+        # IPython.embed()
 

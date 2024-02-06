@@ -232,8 +232,8 @@ def getRewards(stdout, n):
 
 
 # Override rich track so I can embed IPython
-def track(*args, **kwargs):
-    return args[0]
+# def track(*args, **kwargs):
+#     return args[0]
 
 
 def getLatestModel(path):
@@ -404,10 +404,14 @@ class ECallerHistory:
 
 
     @staticmethod
-    def load(run, num=None, keysToDeleteFromInfos=[]):
+    def load(run, num=None, keysToDeleteFromInfos=[], progress=False):
         histories = []
+
+        t = track if progress else lambda x: x
+
         if num is None:
-            for filename in glob(f"./ECallerHistory/{run}/*.history"):
+            filenames = sorted(glob(f"./ECallerHistory/{run}/*.history"), key=lambda x: int(x.split("/")[-1].split(".")[0]))
+            for filename in t(filenames):
                 histories.append(torch.load(filename))
                 if len(keysToDeleteFromInfos):
                     histories[-1].deleteKeysFromInfos(keysToDeleteFromInfos)

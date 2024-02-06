@@ -360,8 +360,25 @@ class DashBoard:
             # make directory containing save file:
             os.makedirs(os.path.dirname(save), exist_ok=True)
 
+            # with open(save, "w") as f:
+            #     c = Console(file=f)
+            #     c.print(mainPanel)
+
+            # Instead I can do a rolling write where I open the file in append mode.
+            # However, I don't want the file to get too big.
+            # So I read in the current file contents and write the last <=1000 lines
+            # plus the new stuff.
+
+            if os.path.exists(save):
+                with open(save, "r") as f:
+                    lines = f.readlines()
+            else:
+                lines = []
+
             with open(save, "w") as f:
+                # f.writelines(lines[-1000:])
                 c = Console(file=f)
+                c.print(''.join(lines[-1000:]))
                 c.print(mainPanel)
 
 
