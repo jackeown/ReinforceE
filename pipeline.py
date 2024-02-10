@@ -12,8 +12,11 @@ import select
 MPTPPath =                      "--folds_path=/home/jack/Desktop/ATP/GCS/MPTPTP2078/Bushy/Folds"
 MPTPStratFile =                 "--strat_file=/home/jack/Desktop/ReinforceE/strats/MPTPTP2078/MASTER.strat"
 MPTPStratFileRR =               "--strat_file=/home/jack/Desktop/ReinforceE/strats/MPTPTP2078/MASTER_RoundRobin.strat"
-MPTP_CommonHeuristic_StratDir = "--strat_file=/home/jack/Desktop/ReinforceE/strats/MPTPTP2078/commonHeuristic"
-MPTP_CommonElse_StratDir =      "--strat_file=/home/jack/Desktop/ReinforceE/strats/MPTPTP2078/commonElse"
+MPTPSuccessStratFile =          "--strat_file=/home/jack/Desktop/ReinforceE/strats/MPTPTP2078/MASTERSuccess.strat"
+MPTPSuccessStratFileRR =        "--strat_file=/home/jack/Desktop/ReinforceE/strats/MPTPTP2078/MASTERSuccess_RoundRobin.strat"
+
+MPT_CommonHeuristic_StratDir = "--strat_file=/home/jack/Desktop/ReinforceE/strats/MPTPTP2078/commonHeuristic"
+MPT_CommonElse_StratDir =      "--strat_file=/home/jack/Desktop/ReinforceE/strats/MPTPTP2078/commonElse"
 
 MPT_CPU_LIMIT = 60
 MPT_CPU_LIMIT_STR =            f"--soft_cpu_limit={MPT_CPU_LIMIT   } --cpu_limit={MPT_CPU_LIMIT+5}"
@@ -22,6 +25,8 @@ MPT_CPU_LIMIT_MODEL_STR =      f"--soft_cpu_limit={MPT_CPU_LIMIT+15} --cpu_limit
 SLHPath =                       "--folds_path=/home/jack/Desktop/ATP/GCS/SLH-29/Folds"
 SLHStratFile =                  "--strat_file=/home/jack/Desktop/ReinforceE/strats/SLH-29/MASTER.strat"
 SLHStratFileRR =                "--strat_file=/home/jack/Desktop/ReinforceE/strats/SLH-29/MASTER_RoundRobin.strat"
+SLHSuccessStratFile =           "--strat_file=/home/jack/Desktop/ReinforceE/strats/SLH-29/MASTERSuccess.strat"
+SLHSuccessStratFileRR =         "--strat_file=/home/jack/Desktop/ReinforceE/strats/SLH-29/MASTERSuccess_RoundRobin.strat"
 SLH_CommonHeuristic_StratDir =  "--strat_file=/home/jack/Desktop/ReinforceE/strats/SLH-29/commonHeuristic"
 SLH_CommonElse_StratDir =       "--strat_file=/home/jack/Desktop/ReinforceE/strats/SLH-29/commonElse"
 
@@ -32,6 +37,8 @@ SLH_CPU_LIMIT_MODEL_STR =      f"--soft_cpu_limit={SLH_CPU_LIMIT+15} --cpu_limit
 VBTPath =                       "--folds_path=/home/jack/Desktop/ATP/GCS/VBT/Folds"
 VBTStratFile =                  "--strat_file=/home/jack/Desktop/ReinforceE/strats/VBT/MASTER.strat"
 VBTStratFileRR =                "--strat_file=/home/jack/Desktop/ReinforceE/strats/VBT/MASTER_RoundRobin.strat"
+VBTSuccessStratFile =           "--strat_file=/home/jack/Desktop/ReinforceE/strats/VBT/MASTERSuccess.strat"
+VBTSuccessStratFileRR =         "--strat_file=/home/jack/Desktop/ReinforceE/strats/VBT/MASTERSuccess_RoundRobin.strat"
 VBT_CommonHeuristic_StratDir =  "--strat_file=/home/jack/Desktop/ReinforceE/strats/VBT/commonHeuristic"
 VBT_CommonElse_StratDir =       "--strat_file=/home/jack/Desktop/ReinforceE/strats/VBT/commonElse"
 
@@ -91,13 +98,25 @@ test_experiments = [
     # f'python tmux_magic_main.py --main_args="{common_flags} {SLH_CPU_LIMIT_MODEL_STR} --auto --policy_type=constcat --eprover_path=eprover_RL-ho_HIST_1 {SLHStratFile}" {SLHPath} SLHConstCat1Hist --test',
     # f'python tmux_magic_main.py --main_args="{common_flags} {SLH_CPU_LIMIT_MODEL_STR} --auto --policy_type=nn --eprover_path=eprover_RL-ho_HIST_1 {SLHStratFile}" {SLHPath} SLHNN1Hist --test',   
 
+    # # CommonHeuristic Experiments...
     # f'python tmux_magic_main.py --main_args="{common_flags} {VBT_CPU_LIMIT_STR} --auto {VBT_CommonHeuristic_StratDir} --policy_type=none --eprover_path=eprover --test_num=1" {VBTPath} VBTCommonHeuristic --test',
-    # f'python tmux_magic_main.py --main_args="{common_flags} {MPT_CPU_LIMIT_STR} --auto {MPTP_CommonHeuristic_StratDir} --policy_type=none --eprover_path=eprover --test_num=1" {MPTPPath} MPTCommonHeuristic --test',
+    # f'python tmux_magic_main.py --main_args="{common_flags} {MPT_CPU_LIMIT_STR} --auto {MPT_CommonHeuristic_StratDir} --policy_type=none --eprover_path=eprover --test_num=1" {MPTPPath} MPTCommonHeuristic --test',
     # f'python tmux_magic_main.py --main_args="{common_flags} {SLH_CPU_LIMIT_STR} --auto {SLH_CommonHeuristic_StratDir} --policy_type=none --eprover_path=eprover-ho --test_num=1" {SLHPath} SLHCommonHeuristic --test',
 
+    # # CommonElse Experiments...
     # f'python tmux_magic_main.py --main_args="{common_flags} {VBT_CPU_LIMIT_STR} --auto {VBT_CommonElse_StratDir} --policy_type=none --eprover_path=eprover --test_num=1" {VBTPath} VBTCommonElse --test',
-    # f'python tmux_magic_main.py --main_args="{common_flags} {MPT_CPU_LIMIT_STR} --auto {MPTP_CommonElse_StratDir} --policy_type=none --eprover_path=eprover --test_num=1" {MPTPPath} MPTCommonElse --test',
+    # f'python tmux_magic_main.py --main_args="{common_flags} {MPT_CPU_LIMIT_STR} --auto {MPT_CommonElse_StratDir} --policy_type=none --eprover_path=eprover --test_num=1" {MPTPPath} MPTCommonElse --test',
     # f'python tmux_magic_main.py --main_args="{common_flags} {SLH_CPU_LIMIT_STR} --auto {SLH_CommonElse_StratDir} --policy_type=none --eprover_path=eprover-ho --test_num=1" {SLHPath} SLHCommonElse --test',
+
+    # # MASTERSuccess Experiments...
+    f'python tmux_magic_main.py --main_args="{common_flags} --test_num=1 {MPT_CPU_LIMIT_STR} --auto --policy_type=none --eprover_path=eprover {MPTPSuccessStratFile}" {MPTPPath} MPTSuccessRoundRobin --test',
+    f'python tmux_magic_main.py --main_args="{common_flags} --test_num=1 {MPT_CPU_LIMIT_STR} --auto --policy_type=none --eprover_path=eprover {MPTPSuccessStratFileRR}" {MPTPPath} MPTSuccessRoundRobinAllOnes --test',
+
+    f'python tmux_magic_main.py --main_args="{common_flags} --test_num=1 {SLH_CPU_LIMIT_STR} --auto --policy_type=none --eprover_path=eprover-ho {SLHSuccessStratFile}" {SLHPath} SLHSuccessRoundRobin --test',
+    f'python tmux_magic_main.py --main_args="{common_flags} --test_num=1 {SLH_CPU_LIMIT_STR} --auto --policy_type=none --eprover_path=eprover-ho {SLHSuccessStratFileRR}" {SLHPath} SLHSuccessRoundRobinAllOnes --test',
+
+    f'python tmux_magic_main.py --main_args="{common_flags} --test_num=1 {VBT_CPU_LIMIT_STR} --auto --policy_type=none --eprover_path=eprover {VBTSuccessStratFile}" {VBTPath} VBTSuccessRoundRobin --test',
+    f'python tmux_magic_main.py --main_args="{common_flags} --test_num=1 {VBT_CPU_LIMIT_STR} --auto --policy_type=none --eprover_path=eprover {VBTSuccessStratFileRR}" {VBTPath} VBTSuccessRoundRobinAllOnes --test',
 
 ]
 
@@ -126,8 +145,8 @@ distill_experiments = []
 #     ]
 
 # experiments_to_run = train_experiments + test_experiments + distill_experiments
-experiments_to_run = train_experiments
-# experiments_to_run = test_experiments
+# experiments_to_run = train_experiments
+experiments_to_run = test_experiments
 
 # Check that CPU is not too busy
 def too_busy(percent):
