@@ -362,7 +362,7 @@ if __name__ == "__main__":
     if args.makeMasterSuccess:
         successStratNames, successStrats = parseStrats(stratPath, run=args.makeMasterSuccess)
         successSummary = summarizeStrats(successStrats)
-        IPython.embed()
+        # IPython.embed()
 
         with open(f"{stratPath}/MASTERSuccess.strat", "w") as f:
             print("Writing MASTERSuccess.strat to ", f.name)
