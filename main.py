@@ -1001,7 +1001,7 @@ if __name__ == "__main__":
     parser.add_argument("--critic_weight", type=float, default=0.4)
     parser.add_argument("--entropy_weight", type=float, default=4e-5)
     parser.add_argument("--max_grad_norm", type=float, default=4.0)
-    parser.add_argument("--max_blame", type=int, default=20_000, help="Maximum number of given clause selections to punish for a failed proof attempt...")
+    parser.add_argument("--max_blame", type=int, default=90_000, help="Maximum number of given clause selections to punish for a failed proof attempt...")
     
     parser.add_argument("--load_model", action="store_true")
     parser.add_argument("--model_path", default="latest_model.pt")

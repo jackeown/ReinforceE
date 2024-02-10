@@ -22,6 +22,9 @@ from functools import reduce
 import matplotlib.pyplot as plt
 from shutil import rmtree
 
+from e_caller import ECallerHistory
+
+
 
 def eliminateComments(stdout, removeHeuristicNames=True):
     stdout = stdout.split("\n")
@@ -142,10 +145,29 @@ def parseStrat(stratFile):
     return strat
 
 
+def filterStratFilesByRun(stratFiles, run):
+    """Returns only the strat files for problems solved during the given run.
+       run can also be a comma separated list of runs to accommodate the 5-fold cross validation.
+    """
+    if ',' in run:
+        runs = run.split(',')
+        d = {}
+        for r in runs:
+            hist = ECallerHistory.load(r, progress=True)
+            d.update(hist.history)
+    else:
+        hist = ECallerHistory.load(run, progress=True)
+        d = hist.history
+    prob2Solved = {p: any([x['solved'] for x in l]) for p,l in d.items()}
+    strat2Prob = lambda s: os.path.basename(s).replace(".strat", "")
+    
+    return [s for s in stratFiles if strat2Prob(s) in prob2Solved and prob2Solved[strat2Prob(s)]]
 
-def parseStrats(stratsPath):
-    print(f"Parsing Strategies from {stratsPath}")
+
+def parseStrats(stratsPath, run=None):
+    print(f"Parsing {'all' if run is None else run} Strategies from {stratsPath}")
     stratFiles = glob(stratsPath + "/*.strat")
+    stratFiles = stratFiles if run is None else filterStratFilesByRun(stratFiles, run)
     parsed = [parseStrat(stratFile) for stratFile in track(stratFiles)]
     stratNames = [os.path.split(stratFile)[1] for stratFile in stratFiles]
     return stratNames, parsed
@@ -286,60 +308,69 @@ def plotStrats(strats, dataset, cutoff=5):
 
 
 
-
-
 if __name__ == "__main__":
 
     parser= argparse.ArgumentParser()
     parser.add_argument("which", type=int)
     parser.add_argument("--makeStrats", action="store_true")
     parser.add_argument("--makeMaster", action="store_true")
+    parser.add_argument("--makeMasterSuccess", default="", help="creates MASTERSuccess.strat and MASTERSuccess_RoundRobin.strat including only problems solved in the named run.")
     parser.add_argument("--makeCommonHeuristic", action="store_true", help="makes a variant of each strat with the merged heuristic")
     parser.add_argument("--makeCommonElse", action="store_true", help="makes a variant of each strat with all params equal to that of the master except for heuristic_def")
     parser.add_argument("--makePlots", action="store_true")
     parser.add_argument("--ipython", action="store_true")
     args = parser.parse_args()
 
-    path = ["strats/MPTPTP2078", "strats/VBT", "strats/SLH-29"][args.which]
+    foldPath, ePath, stratPath = [
+        ("/home/jack/Desktop/ATP/GCS/MPTPTP2078/Bushy/Folds", "eprover", "strats/MPTPTP2078"),
+        ("/home/jack/Desktop/ATP/GCS/VBT/Folds", "eprover", "strats/VBT"),
+        ("/home/jack/Desktop/ATP/GCS/SLH-29/Folds", "eprover-ho", "strats/SLH-29")
+    ][args.which]
 
     if args.makeStrats:
-        [
-            lambda:collectStrats("/home/jack/Desktop/ATP/GCS/MPTPTP2078/Bushy/Folds", "eprover", "strats/MPTPTP2078"),
-            lambda:collectStrats("/home/jack/Desktop/ATP/GCS/VBT/Folds", "eprover", "strats/VBT"),
-            lambda:collectStrats("/home/jack/Desktop/ATP/GCS/SLH-29/Folds", "eprover-ho", "strats/SLH-29")
-        ][args.which]()
+        collectStrats(foldPath, ePath, stratPath)
 
-
-    stratNames, strats = parseStrats(path)
+    stratNames, strats = parseStrats(stratPath)
     summary = summarizeStrats(strats)
 
     if args.makeCommonHeuristic:
         for name, strat in zip(stratNames, strats):
             commonHeuristicStrat = makeMasterStrat(summary, all_ones=False, instead=strat, keepCommon="heuristic")
-            os.makedirs(f"{path}/commonHeuristic", exist_ok=True)
-            with open(f"{path}/commonHeuristic/{name}", "w") as f:
+            os.makedirs(f"{stratPath}/commonHeuristic", exist_ok=True)
+            with open(f"{stratPath}/commonHeuristic/{name}", "w") as f:
                 f.write(serializeStrat(commonHeuristicStrat))
 
     if args.makeCommonElse:
         for name, strat in zip(stratNames, strats):
             commonElseStrat = makeMasterStrat(summary, all_ones=False, instead=strat, keepCommon="else")
-            os.makedirs(f"{path}/commonElse", exist_ok=True)
-            with open(f"{path}/commonElse/{name}", "w") as f:
+            os.makedirs(f"{stratPath}/commonElse", exist_ok=True)
+            with open(f"{stratPath}/commonElse/{name}", "w") as f:
                 f.write(serializeStrat(commonElseStrat))
 
-
-
     if args.makePlots:
-        plotStrats(strats, path.split("/")[-1])
+        plotStrats(strats, stratPath.split("/")[-1])
 
     if args.makeMaster:
-        with open(f"{path}/MASTER.strat", "w") as f:
+        with open(f"{stratPath}/MASTER.strat", "w") as f:
             print("Writing master strategy to", f.name)
             f.write(serializeStrat(makeMasterStrat(deepcopy(summary), all_ones=False)))
 
-        with open(f"{path}/MASTER_RoundRobin.strat", "w") as f:
+        with open(f"{stratPath}/MASTER_RoundRobin.strat", "w") as f:
             print("Writing master strategy (all_ones) to", f.name)
             f.write(serializeStrat(makeMasterStrat(deepcopy(summary), all_ones=True)))
+
+    if args.makeMasterSuccess:
+        successStratNames, successStrats = parseStrats(stratPath, run=args.makeMasterSuccess)
+        successSummary = summarizeStrats(successStrats)
+        IPython.embed()
+
+        with open(f"{stratPath}/MASTERSuccess.strat", "w") as f:
+            print("Writing MASTERSuccess.strat to ", f.name)
+            f.write(serializeStrat(makeMasterStrat(deepcopy(successSummary), all_ones=False)))
+
+        with open(f"{stratPath}/MASTERSuccess_RoundRobin.strat", "w") as f:
+            print("Writing MASTERSuccess_RoundRobin.strat to ", f.name)
+            f.write(serializeStrat(makeMasterStrat(deepcopy(successSummary), all_ones=True)))
 
     print(summary)
 
