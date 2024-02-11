@@ -109,8 +109,8 @@ test_experiments = [
     # f'python tmux_magic_main.py --main_args="{common_flags} {SLH_CPU_LIMIT_STR} --auto {SLH_CommonElse_StratDir} --policy_type=none --eprover_path=eprover-ho --test_num=1" {SLHPath} SLHCommonElse --test',
 
     # # MASTERSuccess Experiments...
-    f'python tmux_magic_main.py --main_args="{common_flags} --test_num=1 {MPT_CPU_LIMIT_STR} --auto --policy_type=none --eprover_path=eprover {MPTPSuccessStratFile}" {MPTPPath} MPTSuccessRoundRobin --test',
-    f'python tmux_magic_main.py --main_args="{common_flags} --test_num=1 {MPT_CPU_LIMIT_STR} --auto --policy_type=none --eprover_path=eprover {MPTPSuccessStratFileRR}" {MPTPPath} MPTSuccessRoundRobinAllOnes --test',
+    # f'python tmux_magic_main.py --main_args="{common_flags} --test_num=1 {MPT_CPU_LIMIT_STR} --auto --policy_type=none --eprover_path=eprover {MPTPSuccessStratFile}" {MPTPPath} MPTSuccessRoundRobin --test',
+    # f'python tmux_magic_main.py --main_args="{common_flags} --test_num=1 {MPT_CPU_LIMIT_STR} --auto --policy_type=none --eprover_path=eprover {MPTPSuccessStratFileRR}" {MPTPPath} MPTSuccessRoundRobinAllOnes --test',
 
     f'python tmux_magic_main.py --main_args="{common_flags} --test_num=1 {SLH_CPU_LIMIT_STR} --auto --policy_type=none --eprover_path=eprover-ho {SLHSuccessStratFile}" {SLHPath} SLHSuccessRoundRobin --test',
     f'python tmux_magic_main.py --main_args="{common_flags} --test_num=1 {SLH_CPU_LIMIT_STR} --auto --policy_type=none --eprover_path=eprover-ho {SLHSuccessStratFileRR}" {SLHPath} SLHSuccessRoundRobinAllOnes --test',
