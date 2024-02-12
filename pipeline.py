@@ -62,7 +62,7 @@ TMP_CPU_LIMIT_MODEL_STR = "--soft_cpu_limit=5 --cpu_limit=10"
 train_experiments = [
     # Neural Nets
     # f'python tmux_magic_main.py --main_args="{common_flags} --lr=8e-4 {SLH_CPU_LIMIT_MODEL_STR} --policy_type=nn --eprover_path=eprover_RL-ho_HIST_1 {SLHStratFile} --auto" {SLHPath} SLHNN1Hist',
-    f'python tmux_magic_main.py --main_args="{common_flags} --lr=8e-4 {MPT_CPU_LIMIT_MODEL_STR} --policy_type=nn --eprover_path=eprover_RL_HIST_1 {MPTPStratFile} --auto" {MPTPPath} MPTNN1Hist',
+    # f'python tmux_magic_main.py --main_args="{common_flags} --lr=8e-4 {MPT_CPU_LIMIT_MODEL_STR} --policy_type=nn --eprover_path=eprover_RL_HIST_1 {MPTPStratFile} --auto" {MPTPPath} MPTNN1Hist',
     f'python tmux_magic_main.py --main_args="{common_flags} --lr=8e-4 {VBT_CPU_LIMIT_MODEL_STR} --policy_type=nn --eprover_path=eprover_RL_HIST_1 {VBTStratFile} --auto" {VBTPath} VBTNN1Hist',
 
     # Constant Categorical Distribution
@@ -145,8 +145,8 @@ distill_experiments = []
 #     ]
 
 # experiments_to_run = train_experiments + test_experiments + distill_experiments
-# experiments_to_run = train_experiments
-experiments_to_run = test_experiments
+experiments_to_run = train_experiments
+# experiments_to_run = test_experiments
 
 # Check that CPU is not too busy
 def too_busy(percent):
