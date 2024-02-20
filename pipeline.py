@@ -77,16 +77,16 @@ test_experiments = [
     # f'python tmux_magic_main.py --main_args="{common_flags} {VBT_CPU_LIMIT_STR} --auto --policy_type=none --eprover_path=eprover {VBTStratFileRR}" {VBTPath} VBTRoundRobinAllOnes --test',
     # f'python tmux_magic_main.py --main_args="{common_flags} {VBT_CPU_LIMIT_STR} --auto --policy_type=none --eprover_path=eprover" {VBTPath} VBTAuto --test',
     # f'python tmux_magic_main.py --main_args="{common_flags} {VBT_CPU_LIMIT_STR} --auto_sched --policy_type=none --eprover_path=eprover" {VBTPath} VBTAutoSched --test',
-    # f'python tmux_magic_main.py --main_args="{common_flags} {VBT_CPU_LIMIT_MODEL_STR} --auto --policy_type=nn --eprover_path=eprover_RL_HIST_1 {VBTStratFile}" {VBTPath} VBTNN1Hist --test',
-    # f'python tmux_magic_main.py --main_args="{common_flags} {VBT_CPU_LIMIT_MODEL_STR} --auto --policy_type=constcat --eprover_path=eprover_RL_HIST_1 {VBTStratFile}" {VBTPath} VBTConstCat1Hist --test',
+    f'python tmux_magic_main.py --main_args="{common_flags} {VBT_CPU_LIMIT_MODEL_STR} --auto --policy_type=nn --eprover_path=eprover_RL_HIST_1 {VBTStratFile}" {VBTPath} VBTNN1Hist --test',
+    f'python tmux_magic_main.py --main_args="{common_flags} {VBT_CPU_LIMIT_MODEL_STR} --auto --policy_type=constcat --eprover_path=eprover_RL_HIST_1 {VBTStratFile}" {VBTPath} VBTConstCat1Hist --test',
 
     # MPTPTP2078 Experiments...
     # f'python tmux_magic_main.py --main_args="{common_flags} {MPT_CPU_LIMIT_STR} --auto --policy_type=none --eprover_path=eprover {MPTPStratFile}" {MPTPPath} MPTRoundRobin --test',
     # f'python tmux_magic_main.py --main_args="{common_flags} {MPT_CPU_LIMIT_STR} --auto --policy_type=none --eprover_path=eprover {MPTPStratFileRR}" {MPTPPath} MPTRoundRobinAllOnes --test',
     # f'python tmux_magic_main.py --main_args="{common_flags} {MPT_CPU_LIMIT_STR} --auto --policy_type=none --eprover_path=eprover --test_num=1" {MPTPPath} MPTAutoAudit --test',
     # f'python tmux_magic_main.py --main_args="{common_flags} {MPT_CPU_LIMIT_STR} --auto_sched --policy_type=none --eprover_path=eprover" {MPTPPath} MPTAutoSched --test',
-    # f'python tmux_magic_main.py --main_args="{common_flags} {MPT_CPU_LIMIT_MODEL_STR} --auto --policy_type=constcat --eprover_path=eprover_RL_HIST_1 {MPTPStratFile}" {MPTPPath} MPTConstCat1Hist --test',
-    # f'python tmux_magic_main.py --main_args="{common_flags} {MPT_CPU_LIMIT_MODEL_STR} --auto --policy_type=nn --eprover_path=eprover_RL_HIST_1 {MPTPStratFile}" {MPTPPath} MPTNN1Hist --test',
+    f'python tmux_magic_main.py --main_args="{common_flags} {MPT_CPU_LIMIT_MODEL_STR} --auto --policy_type=constcat --eprover_path=eprover_RL_HIST_1 {MPTPStratFile}" {MPTPPath} MPTConstCat1Hist --test',
+    f'python tmux_magic_main.py --main_args="{common_flags} {MPT_CPU_LIMIT_MODEL_STR} --auto --policy_type=nn --eprover_path=eprover_RL_HIST_1 {MPTPStratFile}" {MPTPPath} MPTNN1Hist --test',
     
 
 
@@ -95,8 +95,8 @@ test_experiments = [
     # f'python tmux_magic_main.py --main_args="{common_flags} {SLH_CPU_LIMIT_STR} --auto --policy_type=none --eprover_path=eprover-ho {SLHStratFileRR}" {SLHPath} SLHRoundRobinAllOnes --test',
     # f'python tmux_magic_main.py --main_args="{common_flags} {SLH_CPU_LIMIT_STR} --auto --policy_type=none --eprover_path=eprover-ho" {SLHPath} SLHAuto --test',
     # f'python tmux_magic_main.py --main_args="{common_flags} {SLH_CPU_LIMIT_STR} --auto_sched --policy_type=none --eprover_path=eprover-ho" {SLHPath} SLHAutoSched --test',
-    # f'python tmux_magic_main.py --main_args="{common_flags} {SLH_CPU_LIMIT_MODEL_STR} --auto --policy_type=constcat --eprover_path=eprover_RL-ho_HIST_1 {SLHStratFile}" {SLHPath} SLHConstCat1Hist --test',
-    # f'python tmux_magic_main.py --main_args="{common_flags} {SLH_CPU_LIMIT_MODEL_STR} --auto --policy_type=nn --eprover_path=eprover_RL-ho_HIST_1 {SLHStratFile}" {SLHPath} SLHNN1Hist --test',   
+    f'python tmux_magic_main.py --main_args="{common_flags} {SLH_CPU_LIMIT_MODEL_STR} --auto --policy_type=constcat --eprover_path=eprover_RL-ho_HIST_1 {SLHStratFile}" {SLHPath} SLHConstCat1Hist --test',
+    f'python tmux_magic_main.py --main_args="{common_flags} {SLH_CPU_LIMIT_MODEL_STR} --auto --policy_type=nn --eprover_path=eprover_RL-ho_HIST_1 {SLHStratFile}" {SLHPath} SLHNN1Hist --test',   
 
     # # CommonHeuristic Experiments...
     # f'python tmux_magic_main.py --main_args="{common_flags} {VBT_CPU_LIMIT_STR} --auto {VBT_CommonHeuristic_StratDir} --policy_type=none --eprover_path=eprover --test_num=1" {VBTPath} VBTCommonHeuristic --test',
@@ -112,11 +112,11 @@ test_experiments = [
     # f'python tmux_magic_main.py --main_args="{common_flags} --test_num=1 {MPT_CPU_LIMIT_STR} --auto --policy_type=none --eprover_path=eprover {MPTPSuccessStratFile}" {MPTPPath} MPTSuccessRoundRobin --test',
     # f'python tmux_magic_main.py --main_args="{common_flags} --test_num=1 {MPT_CPU_LIMIT_STR} --auto --policy_type=none --eprover_path=eprover {MPTPSuccessStratFileRR}" {MPTPPath} MPTSuccessRoundRobinAllOnes --test',
 
-    f'python tmux_magic_main.py --main_args="{common_flags} --test_num=1 {SLH_CPU_LIMIT_STR} --auto --policy_type=none --eprover_path=eprover-ho {SLHSuccessStratFile}" {SLHPath} SLHSuccessRoundRobin --test',
-    f'python tmux_magic_main.py --main_args="{common_flags} --test_num=1 {SLH_CPU_LIMIT_STR} --auto --policy_type=none --eprover_path=eprover-ho {SLHSuccessStratFileRR}" {SLHPath} SLHSuccessRoundRobinAllOnes --test',
+    # f'python tmux_magic_main.py --main_args="{common_flags} --test_num=1 {SLH_CPU_LIMIT_STR} --auto --policy_type=none --eprover_path=eprover-ho {SLHSuccessStratFile}" {SLHPath} SLHSuccessRoundRobin --test',
+    # f'python tmux_magic_main.py --main_args="{common_flags} --test_num=1 {SLH_CPU_LIMIT_STR} --auto --policy_type=none --eprover_path=eprover-ho {SLHSuccessStratFileRR}" {SLHPath} SLHSuccessRoundRobinAllOnes --test',
 
-    f'python tmux_magic_main.py --main_args="{common_flags} --test_num=1 {VBT_CPU_LIMIT_STR} --auto --policy_type=none --eprover_path=eprover {VBTSuccessStratFile}" {VBTPath} VBTSuccessRoundRobin --test',
-    f'python tmux_magic_main.py --main_args="{common_flags} --test_num=1 {VBT_CPU_LIMIT_STR} --auto --policy_type=none --eprover_path=eprover {VBTSuccessStratFileRR}" {VBTPath} VBTSuccessRoundRobinAllOnes --test',
+    # f'python tmux_magic_main.py --main_args="{common_flags} --test_num=1 {VBT_CPU_LIMIT_STR} --auto --policy_type=none --eprover_path=eprover {VBTSuccessStratFile}" {VBTPath} VBTSuccessRoundRobin --test',
+    # f'python tmux_magic_main.py --main_args="{common_flags} --test_num=1 {VBT_CPU_LIMIT_STR} --auto --policy_type=none --eprover_path=eprover {VBTSuccessStratFileRR}" {VBTPath} VBTSuccessRoundRobinAllOnes --test',
 
 ]
 
@@ -145,8 +145,8 @@ distill_experiments = []
 #     ]
 
 # experiments_to_run = train_experiments + test_experiments + distill_experiments
-experiments_to_run = train_experiments
-# experiments_to_run = test_experiments
+# experiments_to_run = train_experiments
+experiments_to_run = test_experiments
 
 # Check that CPU is not too busy
 def too_busy(percent):

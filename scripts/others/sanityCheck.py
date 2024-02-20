@@ -14,7 +14,7 @@ from rich.progress import track
 from rich import print
 
 
-run = 'testhist2c'
+run = sys.argv[1]
 # policy = torch.load(f'models/{run}.pt')
 # policy = torch.load("dummy.pt")
 # p = lambda x: torch.softmax(policy(normalizeState(x.float())), dim=1)
@@ -88,8 +88,8 @@ def correlation_heatmap(A, B, index=0):
 
     # Create a heatmap
     sns.heatmap(corr_matrix, annot=True, cmap='coolwarm', fmt='.2f', annot_kws={"size": 6}, vmin=-0.4, vmax=0.4) # need to set low and high values for consistent frames
-    plt.xlabel('Columns of B')
-    plt.ylabel('Columns of A')
+    plt.xlabel('New Action Probabilities')
+    plt.ylabel('Past Action Frequency')
     plt.title('Correlation Matrix Heatmap')
 
     # Save the figure
@@ -136,7 +136,7 @@ policies = [(getNum(f),torch.load(f)) for f in glob(f'model_histories/{run}/*.pt
 policies = sorted(policies, key=lambda x: x[0])
 
 # step = 1
-step = max(1, len(policies) // 200)
+step = max(1, len(policies) // 20)
 policies = policies[::step]
 
 mats = []

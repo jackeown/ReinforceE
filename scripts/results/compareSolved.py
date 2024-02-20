@@ -411,48 +411,84 @@ def tableToHTML(table):
 	return tableHTML
 
 
-def tableToLaTeX(table, caption, label, dataset=None):
-	"""The input table is a rich table in a particular format.
-	There are 2 header rows: The first is the dataset name,
-	and the second is the column names.
-	"""
+
+# GPT4 says this will match the phd formatting I used.
+def tableToLaTeX(table, caption, label):
+    """Converts a rich table to LaTeX format wrapped in a minipage environment.
+    The input table is expected to have column names as headers.
+    """
+    
+    # Beginning of Minipage and Table Boilerplate
+    tableLaTeX = "\\begin{minipage}{0.48\\textwidth}\n"
+    tableLaTeX += "\\centering\n"
+    columnFormatting = 'l' + 'r' * (len(table.columns) - 1)  # Assuming 'l' for the first column and 'r' for the rest
+    tableLaTeX += f"\\begin{{tabular}}{{{columnFormatting}}}\n"
+    
+    # Header row: Column names
+    tableLaTeX += "\\toprule\n"
+    tableLaTeX += f"{' & '.join([col.header for col in table.columns])} \\\\\n"
+    tableLaTeX += "\\midrule\n"
+    
+    # Actual data rows
+    for row in getTableRows(table):  # Assuming getTableRows is a function that returns the rows of the table
+        tableLaTeX += f"{' & '.join(row)} \\\\\n"
+    
+    # End of Table Boilerplate
+    tableLaTeX += "\\bottomrule\n"
+    tableLaTeX += "\\end{tabular}\n"
+    
+    # Label and Caption using \captionof for compatibility with minipage
+    tableLaTeX += f"\\captionof{{table}}{{{caption}}}\n"
+    tableLaTeX += f"\\label{{{label}}}\n"
+    tableLaTeX += "\\end{minipage}%\n"  # The '%' at the end helps to avoid unwanted spaces after the minipage if used in a sequence
+    
+    return tableLaTeX
 
 
-	# Beginning of Table Boilerplate...
-	# tableLaTeX = f"\\begin{{table}}[h]\n" # WRONG
-	# [h] has to be escaped because of rich...
-	tableLaTeX = f"\\begin{{table}}\[h]\n"
-	tableLaTeX += f"\\centering\n"
-	columnFormatting = 'l' + 'r'*(len(table.columns)-1)
-	tableLaTeX += f"\\begin{{tabular}}{{{columnFormatting}}}\n"
 
-	# Header rows: Dataset name and column names
-	tableLaTeX += f"\\toprule\n"
-	if dataset:
-		# insert dataset header:
-		tableLaTeX += f"\\multicolumn{{{len(table.columns)}}}{{c}}{{{dataset}}} \\\\\n"
-		tableLaTeX += f"\\midrule\n"
 
-	tableLaTeX += f"{' & '.join([col.header for col in table.columns])} \\\\\n"
-	tableLaTeX += f"\\midrule\n"
+# def tableToLaTeX(table, caption, label, dataset=None):
+# 	"""The input table is a rich table in a particular format.
+# 	There are 2 header rows: The first is the dataset name,
+# 	and the second is the column names.
+# 	"""
 
-	# actual data
-	for row in getTableRows(table):
-		tableLaTeX += f"{' & '.join(row)} \\\\\n"
+
+# 	# Beginning of Table Boilerplate...
+# 	# tableLaTeX = f"\\begin{{table}}[h]\n" # WRONG
+# 	# [h] has to be escaped because of rich...
+# 	tableLaTeX = f"\\begin{{table}}\[h]\n"
+# 	tableLaTeX += f"\\centering\n"
+# 	columnFormatting = 'l' + 'r'*(len(table.columns)-1)
+# 	tableLaTeX += f"\\begin{{tabular}}{{{columnFormatting}}}\n"
+
+# 	# Header rows: Dataset name and column names
+# 	tableLaTeX += f"\\toprule\n"
+# 	if dataset:
+# 		# insert dataset header:
+# 		tableLaTeX += f"\\multicolumn{{{len(table.columns)}}}{{c}}{{{dataset}}} \\\\\n"
+# 		tableLaTeX += f"\\midrule\n"
+
+# 	tableLaTeX += f"{' & '.join([col.header for col in table.columns])} \\\\\n"
+# 	tableLaTeX += f"\\midrule\n"
+
+# 	# actual data
+# 	for row in getTableRows(table):
+# 		tableLaTeX += f"{' & '.join(row)} \\\\\n"
 	
-	# End of Table Boilerplate
-	tableLaTeX += f"\\bottomrule\n"
-	tableLaTeX += f"\\end{{tabular}}\n"
+# 	# End of Table Boilerplate
+# 	tableLaTeX += f"\\bottomrule\n"
+# 	tableLaTeX += f"\\end{{tabular}}\n"
 
 
-	# label and caption
-	tableLaTeX += f"\\caption{{{caption}}}\n"
-	tableLaTeX += f"\\label{{{label}}}\n"
+# 	# label and caption
+# 	tableLaTeX += f"\\caption{{{caption}}}\n"
+# 	tableLaTeX += f"\\label{{{label}}}\n"
 		
 
-	tableLaTeX += f"\\end{{table}}\n"
+# 	tableLaTeX += f"\\end{{table}}\n"
 
-	return tableLaTeX
+# 	return tableLaTeX
 
 
 
