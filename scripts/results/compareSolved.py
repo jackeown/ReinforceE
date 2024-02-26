@@ -413,7 +413,7 @@ def tableToHTML(table):
 
 
 # GPT4 says this will match the phd formatting I used.
-def tableToLaTeX(table, caption, label):
+def tableToLaTeX(table, caption, label, dataset=None):
     """Converts a rich table to LaTeX format wrapped in a minipage environment.
     The input table is expected to have column names as headers.
     """

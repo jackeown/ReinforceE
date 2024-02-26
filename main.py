@@ -562,8 +562,8 @@ def waitForLearner(profiler, episode_queue, message_queue, processes, sentCount)
                     sleepTimes[i] = 0
 
             for i in range(len(sleepTimes) - 1, -1, -1):  # Iterate in reverse to avoid index errors
-                if sleepTimes[i] > 150*(1/dt):
-                    message = f"We've waited 150 seconds for process {sentCount + i}. Aborting."
+                if sleepTimes[i] > 120*(1/dt):
+                    message = f"We've waited 120 seconds for process {sentCount + i}. Aborting."
                     message_queue.put(message)
                     print(message)
                     
@@ -830,11 +830,13 @@ def TrainPolicy(problems, args):
             info = gather_info_queue.get()
             if info['solved']:
                 numSuccess += 1
+                dashboard.procCounts.append(info['processed_count'])
             else:
                 numFailure += 1
 
             history.addInfo(info)
             dashboard.registerProofAttemptReward(info['rewards'].sum())
+            
             if not args.lunar_lander:
                 dashboard.registerProofAttemptSuccess(info['solved'])
 
@@ -949,7 +951,7 @@ def EvaluatePolicy(policy, problems, args):
                 else:
                     print('-', end='')
                 
-                print(f"{probsSolved} / {j+1} ({probsSolved / (j+1):.2%})") # what percent solved?
+                print(f"{probsSolved} / {j+1 + i*len(problems)} ({probsSolved / (j+1 + i*len(problems)):.2%})") # what percent solved?
 
                 history.addInfo(info)
                 history.save(f"{args.run}", None, eager=False)

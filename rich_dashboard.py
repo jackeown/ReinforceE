@@ -11,7 +11,7 @@ import termplotlib as tpl
 import numpy as np
 from datetime import datetime
 from my_profiler import Profiler
-import itertools
+import itertools, functools
 import os
 from helpers import saveToDir
 
@@ -25,6 +25,12 @@ def grouper(iterable, n):
 
 def mean(x):
     return sum(x) / len(x)
+
+def prod(x):
+    return functools.reduce(lambda x,y: x*y, x)
+
+def geomean(x):
+    return (prod(x))**(1/len(x))
 
 class DashBoard:
 
@@ -59,7 +65,7 @@ class DashBoard:
 
         self.proofAttemptSuccesses = []
         self.proofAttemptRewards = []
-
+        self.procCounts = []
 
 
 
@@ -288,6 +294,22 @@ class DashBoard:
             print(self.losses)
             return Panel(f"Failed to get LossGraphPanel (mode={mode}) (e={e})")
 
+
+    def getProcCountGraphPanel(self):
+        if len(self.procCounts) == 0:
+            return Panel("No data yet")
+        else:
+            n = len(self.procCounts)
+
+            step = max(n // 7, 1)
+            mean_step = max(step // 20, 1)
+            xs = list(range(0,n, step))
+            
+            ys = [mean(self.procCounts[i:i+step:mean_step]) for i in xs]
+            fig = tpl.figure()
+            fig.plot(xs,ys)
+            return Panel(fig.get_string(), title="Mean Processed Counts")
+
     
     def getTimeStr(self):
         return "[white]" + datetime.now().strftime("%H:%M:%S") + "[/white]"
@@ -310,7 +332,12 @@ class DashBoard:
             self.getLossGraphPanel("entropy", "cyan", f"{ 'Smoothed ' if smooth else ''}Entropy in bits", smoothed=smooth)
         )
 
-        progressPanel = self.getRewardGraphPanel() if (self.iteration % 2) == 0 else self.getProofAttemptSuccessRateGraphPanel()
+        progressPanel = [
+            self.getRewardGraphPanel,
+            self.getProofAttemptSuccessRateGraphPanel,
+            self.getProcCountGraphPanel
+        ][self.iteration % 3]()
+        # progressPanel = self.getRewardGraphPanel() if (self.iteration % 2) == 0 else self.getProofAttemptSuccessRateGraphPanel()
 
         leftSide = Group(
             self.getLossPanel(),
