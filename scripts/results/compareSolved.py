@@ -544,7 +544,9 @@ if __name__ == "__main__":
 		"NNMem1e3Ent": r"\_Mem1e3Ent",
 		"NNMem5e3Ent": r"\_Mem5e3Ent",
 		"NNMem5e5Ent": r"\_Mem5e5Ent",
-		"NN1Hist": r"\_Hist1",
+
+		"NN1Hist": r"\_NeuralNet",
+		"ConstCat1Hist": r"\_ConstCat",
 	}
 
 	def subFunc(runName):
