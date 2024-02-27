@@ -140,9 +140,9 @@ for gain in gains:
 distill_experiments = []
 for gain in gains:
     distill_experiments += [
-        f'python tmux_magic_main.py --main_args="{common_flags} {VBT_CPU_LIMIT_STR} --policy_type=none --eprover_path=eprover --strat_file=strats/VBT/distilledVBT_gain{gain}_0.strat --auto" {VBTPath} VBTConstCatDistilled_gain{gain}_ --update_strat_file_suffix --test',
-        f'python tmux_magic_main.py --main_args="{common_flags} {SLH_CPU_LIMIT_STR} --policy_type=none --eprover_path=eprover-ho --strat_file=strats/SLH-29/distilledSLH_gain{gain}_0.strat --auto" {SLHPath} SLHConstCatDistilled_gain{gain}_ --update_strat_file_suffix --test',
-        f'python tmux_magic_main.py --main_args="{common_flags} {MPT_CPU_LIMIT_STR} --policy_type=none --eprover_path=eprover --strat_file=strats/MPTPTP2078/distilledMPT_gain{gain}_0.strat --auto" {MPTPPath} MPTConstCatDistilled_gain{gain}_ --update_strat_file_suffix --test',
+        f'python tmux_magic_main.py --main_args="{common_flags} --test_num=1 {VBT_CPU_LIMIT_STR} --policy_type=none --eprover_path=eprover --strat_file=strats/VBT/distilledVBT_gain{gain}_0.strat --auto" {VBTPath} VBTConstCatDistilled_gain{gain}_ --update_strat_file_suffix --test',
+        f'python tmux_magic_main.py --main_args="{common_flags} --test_num=1 {SLH_CPU_LIMIT_STR} --policy_type=none --eprover_path=eprover-ho --strat_file=strats/SLH-29/distilledSLH_gain{gain}_0.strat --auto" {SLHPath} SLHConstCatDistilled_gain{gain}_ --update_strat_file_suffix --test',
+        f'python tmux_magic_main.py --main_args="{common_flags} --test_num=1 {MPT_CPU_LIMIT_STR} --policy_type=none --eprover_path=eprover --strat_file=strats/MPTPTP2078/distilledMPT_gain{gain}_0.strat --auto" {MPTPPath} MPTConstCatDistilled_gain{gain}_ --update_strat_file_suffix --test',
     ]
 
 # experiments_to_run = train_experiments + test_experiments + distill_experiments
