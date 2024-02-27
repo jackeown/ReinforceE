@@ -147,7 +147,7 @@ def buildSmallerTables(hists, subFunc=lambda x: x):
 		solvedVSAuto = compareSolved(probsSolved, set(procCounts[autoKey].keys()))
 		rows.append([
 			f"[white]{subFunc(key)}[/white]",
-			numSolved,
+			f"{numSolved:.2f}",
 			f"[red]+{solvedVSAuto[0]} , -{solvedVSAuto[1]}[/red]",
 		])
 	
