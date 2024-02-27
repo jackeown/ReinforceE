@@ -562,7 +562,7 @@ def waitForLearner(profiler, episode_queue, message_queue, processes, sentCount)
                     sleepTimes[i] = 0
 
             for i in range(len(sleepTimes) - 1, -1, -1):  # Iterate in reverse to avoid index errors
-                if sleepTimes[i] > 120*(1/dt):
+                if sleepTimes[i] > 2*args.cpu_limit*(1/dt):
                     message = f"We've waited 120 seconds for process {sentCount + i}. Aborting."
                     message_queue.put(message)
                     print(message)

@@ -301,13 +301,14 @@ class DashBoard:
         else:
             n = len(self.procCounts)
 
-            step = max(n // 7, 1)
-            mean_step = max(step // 20, 1)
+            step = max(n // 5, 1)
+            # mean_step = max(step // 100, 1)
+            mean_step = 1
             xs = list(range(0,n, step))
             
             ys = [mean(self.procCounts[i:i+step:mean_step]) for i in xs]
             fig = tpl.figure()
-            fig.plot(xs,ys)
+            fig.plot(xs[:-1],ys[:-1])
             return Panel(fig.get_string(), title="Mean Processed Counts")
 
     

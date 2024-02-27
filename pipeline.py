@@ -123,30 +123,32 @@ test_experiments = [
 
 
 
-# model_prefixes = ["models/VBTConstCat", "models/SLHConstCat", "models/MPTConstCat"]
-# master_strats = ["strats/VBT/MASTER.strat", "strats/SLH-29/MASTER.strat", "strats/MPTPTP2078/MASTER.strat"]
-# strat_path_prefixes = ["strats/VBT/distilledVBT", "strats/SLH-29/distilledSLH", "strats/MPTPTP2078/distilledMPT"]
+model_prefixes = ["models/VBTConstCat1Hist", "models/SLHConstCat1Hist", "models/MPTConstCat1Hist"]
+master_strats = ["strats/VBT/MASTER.strat", "strats/SLH-29/MASTER.strat", "strats/MPTPTP2078/MASTER.strat"]
+strat_path_prefixes = ["strats/VBT/distilledVBT", "strats/SLH-29/distilledSLH", "strats/MPTPTP2078/distilledMPT"]
 
 # gains = [2,5,10]
-# for gain in gains:
-#     for model_prefix, master_strat, strat_path_prefix in zip(model_prefixes, master_strats, strat_path_prefixes):
-#         for i in range(5):
-#             command = f"python scripts/others/distill.py {model_prefix}{i}.pt {master_strat} {strat_path_prefix}_gain{gain}_{i}.strat --gain={gain}"
-#             subprocess.call(command, shell=True)
+gains = [5]
+for gain in gains:
+    for model_prefix, master_strat, strat_path_prefix in zip(model_prefixes, master_strats, strat_path_prefixes):
+        for i in range(5):
+            command = f"python scripts/others/distill.py {model_prefix}{i}.pt {master_strat} {strat_path_prefix}_gain{gain}_{i}.strat --gain={gain}"
+            subprocess.call(command, shell=True)
 
 
 # one for VBT,SLH, and MPT
 distill_experiments = []
-# for gain in gains:
-#     distill_experiments += [
-#         f'python tmux_magic_main.py --main_args="{common_flags} {VBT_CPU_LIMIT_STR} --policy_type=none --eprover_path=eprover --strat_file=strats/VBT/distilledVBT_gain{gain}_0.strat --auto" {VBTPath} VBTConstCatDistilled_gain{gain}_ --update_strat_file_suffix --test',
-#         f'python tmux_magic_main.py --main_args="{common_flags} {SLH_CPU_LIMIT_STR} --policy_type=none --eprover_path=eprover-ho --strat_file=strats/SLH-29/distilledSLH_gain{gain}_0.strat --auto" {SLHPath} SLHConstCatDistilled_gain{gain}_ --update_strat_file_suffix --test',
-#         f'python tmux_magic_main.py --main_args="{common_flags} {MPT_CPU_LIMIT_STR} --policy_type=none --eprover_path=eprover --strat_file=strats/MPTPTP2078/distilledMPT_gain{gain}_0.strat --auto" {MPTPPath} MPTConstCatDistilled_gain{gain}_ --update_strat_file_suffix --test',
-#     ]
+for gain in gains:
+    distill_experiments += [
+        f'python tmux_magic_main.py --main_args="{common_flags} {VBT_CPU_LIMIT_STR} --policy_type=none --eprover_path=eprover --strat_file=strats/VBT/distilledVBT_gain{gain}_0.strat --auto" {VBTPath} VBTConstCatDistilled_gain{gain}_ --update_strat_file_suffix --test',
+        f'python tmux_magic_main.py --main_args="{common_flags} {SLH_CPU_LIMIT_STR} --policy_type=none --eprover_path=eprover-ho --strat_file=strats/SLH-29/distilledSLH_gain{gain}_0.strat --auto" {SLHPath} SLHConstCatDistilled_gain{gain}_ --update_strat_file_suffix --test',
+        f'python tmux_magic_main.py --main_args="{common_flags} {MPT_CPU_LIMIT_STR} --policy_type=none --eprover_path=eprover --strat_file=strats/MPTPTP2078/distilledMPT_gain{gain}_0.strat --auto" {MPTPPath} MPTConstCatDistilled_gain{gain}_ --update_strat_file_suffix --test',
+    ]
 
 # experiments_to_run = train_experiments + test_experiments + distill_experiments
 # experiments_to_run = train_experiments
-experiments_to_run = test_experiments
+# experiments_to_run = test_experiments
+experiments_to_run = distill_experiments
 
 # Check that CPU is not too busy
 def too_busy(percent):
