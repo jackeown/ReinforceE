@@ -22,8 +22,9 @@ def modifyCEFs(cefs, policy):
     assert len(cefs) == len(policy), f"len(cefs)={len(cefs)} != len(policy)={len(policy)}"
 
     for newWeight, oldCEF in zip(policy, cefs):
-        if newWeight > 0:
-            newCEFs.append([newWeight, oldCEF[1]])
+        if newWeight == 0:
+            newWeight = 1
+        newCEFs.append([newWeight, oldCEF[1]])
     return newCEFs
 
 def getPolicy(filename):
