@@ -168,6 +168,7 @@ def parseStrats(stratsPath, run=None):
     print(f"Parsing {'all' if run is None else run} Strategies from {stratsPath}")
     stratFiles = glob(stratsPath + "/*.strat")
     stratFiles = stratFiles if run is None else filterStratFilesByRun(stratFiles, run)
+    stratFiles = [f for f in stratFiles if "MASTER" not in f and "common" not in f]
     parsed = [parseStrat(stratFile) for stratFile in track(stratFiles)]
     stratNames = [os.path.split(stratFile)[1] for stratFile in stratFiles]
     return stratNames, parsed
