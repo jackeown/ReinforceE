@@ -38,7 +38,7 @@ def regroup(mpt,vbt,slh):
 
     metricGroups = []
     for mptSec, vbtSec, slhSec in zip(mptSections, vbtSections, slhSections):
-        metricGroups.append(mptSec + vbtSec + [r'\vspace{1cm}'] +slhSec)
+        metricGroups.append(mptSec + [r'\hfill'] vbtSec + [r'\vspace{1cm}'] +slhSec)
     return metricGroups
 
 
@@ -65,6 +65,6 @@ if __name__ == "__main__":
         with open(f"{args.outputDir}/{metric}.tex", "w") as f:
             for line in metricGroup:
                 f.write(line)
-                
+
     IPython.embed()
     
