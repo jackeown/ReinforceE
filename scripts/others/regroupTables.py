@@ -66,5 +66,5 @@ if __name__ == "__main__":
             for line in metricGroup:
                 f.write(line)
 
-    IPython.embed()
+    # IPython.embed()
     
