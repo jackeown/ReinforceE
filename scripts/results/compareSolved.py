@@ -572,7 +572,7 @@ if __name__ == "__main__":
 
 	def keyFunc(stuff):
 		histName, (key,table) = stuff
-		majorOrder = ["problems solved", "processed clauses", "generated clauses", "proof clauses", "efficiency"].index(key)
+		majorOrder = ["Problems Solved", "Processed Clauses", "Generated Clauses", "Proof Clauses", "Efficiency"].index(key)
 		minorOrder = 0 if histName.startswith("MPT") else 1 if histName.startswith("VBT") else 2 if histName.startswith("SLH") else 3
 		return 10*majorOrder + minorOrder
 
@@ -581,11 +581,11 @@ if __name__ == "__main__":
 		# print(table)
 		# print("#"*100)
 		if histName.startswith("MPT"):
-			print(tableToLaTeX(table, caption=f"M'2078 {key}", label=f"mpt{stripAndCamelCase(key)}Table",dataset=f"MPTPTP2078 {key}"))
+			print(tableToLaTeX(table, caption=f"M'2078 {key.lower()}", label=f"mpt{stripAndCamelCase(key)}Table",dataset=f"MPTPTP2078 {key}"))
 		elif histName.startswith("VBT"):
-			print(tableToLaTeX(table, caption=f"VBT {key}", label=f"vbt{stripAndCamelCase(key)}Table",dataset=f"VBT {key}"))
+			print(tableToLaTeX(table, caption=f"VBT {key.lower()}", label=f"vbt{stripAndCamelCase(key)}Table",dataset=f"VBT {key}"))
 		elif histName.startswith("SLH"):
-			print(tableToLaTeX(table, caption=f"SLH {key}", label=f"slh{stripAndCamelCase(key)}Table",dataset=f"SLH-29 {key}"))
+			print(tableToLaTeX(table, caption=f"SLH {key.lower()}", label=f"slh{stripAndCamelCase(key)}Table",dataset=f"SLH-29 {key}"))
 		else:
 			print("UNKNOWN Dataset ", histName)
 
