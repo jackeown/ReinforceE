@@ -412,6 +412,10 @@ def tableToHTML(table):
 
 
 
+def boldMine(row):
+	criteria = lambda x: ("NeuralNet" in x) or ("ConstCat" in x)
+	return [r'\textbf{' + x + r'}' if criteria(x) else x for x in row]
+
 # GPT4 says this will match the phd formatting I used.
 def tableToLaTeX(table, caption, label, dataset=None):
     """Converts a rich table to LaTeX format wrapped in a minipage environment.
@@ -431,7 +435,7 @@ def tableToLaTeX(table, caption, label, dataset=None):
     
     # Actual data rows
     for row in getTableRows(table):  # Assuming getTableRows is a function that returns the rows of the table
-        tableLaTeX += f"{' & '.join(row)} \\\\\n"
+        tableLaTeX += f"{' & '.join(boldMine(row))} \\\\\n"
     
     # End of Table Boilerplate
     tableLaTeX += "\\bottomrule\n"
