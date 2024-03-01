@@ -38,7 +38,7 @@ def regroup(mpt,vbt,slh):
 
     metricGroups = []
     for mptSec, vbtSec, slhSec in zip(mptSections, vbtSections, slhSections):
-        metricGroups.append(mptSec + [r'\hfill%\n'] + vbtSec + [r'\vspace{1cm}\n'] +slhSec)
+        metricGroups.append(mptSec + ['\\hfill%\n'] + vbtSec + ['\\vspace{1cm}\n'] +slhSec)
     return metricGroups
 
 
