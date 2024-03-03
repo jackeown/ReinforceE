@@ -60,7 +60,7 @@ def calculateReturnsAndAdvantageEstimate(policy, episode, GAMMA=0.999, LAMBDA=0.
     #     a proof with 1,000 steps therefore has return of 90
     #     and a proof with 10,000 steps has of return = 0.
     #     an unsuccessful proof with n steps would have return of -n*penalty
-    penalty = 1e-4
+    penalty = 3e-4
     reward = episode.rewards*10.0 - penalty
 
     values_shifted = np.zeros_like(values)
@@ -443,7 +443,7 @@ class PolicyNet(nn.Module):
         self.stateSize = inDim
         self.numActions = outDim
 
-        newIndim = inDim if inDim <= 5 else 5 + outDim
+        newIndim = inDim if inDim <= 5 else 5 + outDim + ((inDim -5) // 5)*4
         # newIndim = 5 + outDim
 
         self.inputDropout = nn.Dropout(dropoutProb)
@@ -493,7 +493,11 @@ class PolicyNet(nn.Module):
 
         # 3.) Add back actual current state (last 5 features)
         current_state = state[:, -5:]
-        newState = torch.cat([oneHotsSummed, current_state], dim=1)
+        pSizes = state[:, 0:-5:5]
+        uSizes = state[:, 1:-5:5]
+        pWeights = state[:, 2:-5:5]
+        uWeights = state[:, 3:-5:5]
+        newState = torch.cat([oneHotsSummed, current_state, pSizes, uSizes, pWeights, uWeights], dim=1)
 
         if verbose:
             pprint("Action Features", actionFeatures)
