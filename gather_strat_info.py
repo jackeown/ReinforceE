@@ -402,7 +402,7 @@ if __name__ == "__main__":
         os.makedirs(f"{stratPath}/incremental", exist_ok=True)
         
         # Sort strats:
-        stratNames, strats = sorted(zip(stratNames, strats), key=stratSortKey(args.which))
+        stratNames, strats = zip(*sorted(zip(stratNames, strats), key=stratSortKey(args.which)))
         
         # Incrementally go through them making new versions:
         soFar = []
