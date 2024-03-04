@@ -318,7 +318,7 @@ def stratSortKey(which):
         return lambda nameNStrat: nameNStrat[0]
     
     def slhKey(nameNStrat):
-        prob = nameNStrat[0]
+        prob = nameNStrat[0].split(".strat")[0]
         probPath = f"~/Desktop/ATP/GCS/SLH-29/Problems/{prob}"
         with open(probPath) as f:
             lines = f.readlines()
