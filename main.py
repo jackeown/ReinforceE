@@ -283,7 +283,11 @@ def communicate_with_timeout(policy, workerId, state_dim, subprocess, timeout):
     thread.join(timeout=timeout)
     if thread.is_alive():
         print("Timeout occurred, terminating subprocess and aborting communicateWithE.")
-        subprocess.terminate()  # Ensure the subprocess is terminated
+        try:
+            subprocess.terminate()  # Ensure the subprocess is terminated
+        except ProcessLookupError:
+            print("eprover Subprocess already terminated.")
+            
         thread.join()  # Wait for the thread to clean up
         return False  # Indicate that a timeout occurred
     return True  # Indicate successful completion
