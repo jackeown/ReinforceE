@@ -23,6 +23,7 @@ import matplotlib.pyplot as plt
 from shutil import rmtree
 
 from e_caller import ECallerHistory
+from datetime import datetime, timezone
 
 
 
@@ -92,6 +93,8 @@ def run_eprover(prob_info):
 
     return (None, None)
 
+
+
 def collectStrats(probsPath, eproverPath, stratsPath):
     print(f"Collecting strats from {probsPath}")
 
@@ -143,6 +146,9 @@ def parseStrat(stratFile):
         strat["heuristic_def"] = tuple(sorted([(int(w),f) for w,f in strat["heuristic_def"]]))
 
     return strat
+
+
+
 
 
 def filterStratFilesByRun(stratFiles, run):
@@ -306,6 +312,24 @@ def plotStrats(strats, dataset, cutoff=5):
 
 
 
+def stratSortKey(which):
+
+    if which in [0,1]:
+        return lambda nameNStrat: nameNStrat[0]
+    
+    def slhKey(nameNStrat):
+        prob = nameNStrat[0]
+        probPath = f"~/Desktop/ATP/GCS/SLH-29/Problems/{prob}"
+        with open(probPath) as f:
+            lines = f.readlines()
+        
+        datetimeStr = lines[2].split("#")[1]
+        dt_object = datetime.strptime(datetimeStr, '%Y-%m-%d %H:%M:%S.%f')
+        return dt_object.replace(tzinfo=timezone.utc).timestamp()
+
+    return slhKey
+
+
 
 
 
@@ -318,6 +342,7 @@ if __name__ == "__main__":
     parser.add_argument("--makeMasterSuccess", default="", help="creates MASTERSuccess.strat and MASTERSuccess_RoundRobin.strat including only problems solved in the named run.")
     parser.add_argument("--makeCommonHeuristic", action="store_true", help="makes a variant of each strat with the merged heuristic")
     parser.add_argument("--makeCommonElse", action="store_true", help="makes a variant of each strat with all params equal to that of the master except for heuristic_def")
+    parser.add_argument("--makeIncremental", action="store_true", help="makes a variant of each strat that is the merging of all strats that came before in the problem ordering. (for simulating Sledgehammer basically)")
     parser.add_argument("--makePlots", action="store_true")
     parser.add_argument("--ipython", action="store_true")
     args = parser.parse_args()
@@ -372,8 +397,22 @@ if __name__ == "__main__":
         with open(f"{stratPath}/MASTERSuccess_RoundRobin.strat", "w") as f:
             print("Writing MASTERSuccess_RoundRobin.strat to ", f.name)
             f.write(serializeStrat(makeMasterStrat(deepcopy(successSummary), all_ones=True)))
+    
+    if args.makeIncremental:
+        os.makedirs(f"{stratPath}/incremental", exist_ok=True)
+        
+        # Sort strats:
+        stratNames, strats = sorted(zip(stratNames, strats), key=stratSortKey(args.which))
+        
+        # Incrementally go through them making new versions:
+        soFar = []
+        for name, strat in track(list(zip(stratNames, strats))):
+            soFar.append(strat)
+            newStrat = makeMasterStrat(summarizeStrats(soFar), all_ones=False)
+            with open(f"{stratPath}/incremental/{name}", "w") as f:
+                f.write(serializeStrat(newStrat))
 
-    print(summary)
+    # print(summary)
 
     if args.ipython:
         IPython.embed()
