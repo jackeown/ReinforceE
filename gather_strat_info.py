@@ -323,7 +323,7 @@ def stratSortKey(which):
         with open(probPath) as f:
             lines = f.readlines()
         
-        datetimeStr = lines[2].split("#")[1]
+        datetimeStr = lines[2].split("%")[1].strip()
         dt_object = datetime.strptime(datetimeStr, '%Y-%m-%d %H:%M:%S.%f')
         return dt_object.replace(tzinfo=timezone.utc).timestamp()
 
