@@ -255,6 +255,46 @@ def makeEnv(workerId):
 
     return env
 
+
+
+
+
+# Helper from GPT4:
+def communicate_with_timeout(policy, workerId, state_dim, subprocess, timeout):
+    """
+    Executes communicateWithE in a separate thread and waits for it to complete with a timeout.
+    If the function exceeds the timeout, terminates the subprocess and returns False indicating a timeout occurred.
+    
+    Args:
+        policy: The policy object to pass to communicateWithE.
+        workerId: The worker ID to pass to communicateWithE.
+        state_dim: The state dimension to pass to communicateWithE.
+        subprocess: The subprocess.Popen object representing the running E process.
+        timeout: The timeout duration in seconds.
+    
+    Returns:
+        A boolean indicating whether the function completed before the timeout.
+    """
+    def target():
+        communicateWithE(policy, workerId, state_dim)
+
+    thread = threading.Thread(target=target)
+    thread.start()
+    thread.join(timeout=timeout)
+    if thread.is_alive():
+        print("Timeout occurred, terminating subprocess and aborting communicateWithE.")
+        subprocess.terminate()  # Ensure the subprocess is terminated
+        thread.join()  # Wait for the thread to clean up
+        return False  # Indicate that a timeout occurred
+    return True  # Indicate successful completion
+
+
+
+
+
+
+
+
 def runE(policy, eproverPath, problemPath, state_dim=5, soft_cpu_limit=1, cpu_limit=5, auto=False, auto_sched=False, create_info=True, verbose=False, dryRun=False, strat_file=None):
     problemName = os.path.split(problemPath)[1]
     workerId = random.randint(0,1_000_000_000)
@@ -293,12 +333,13 @@ def runE(policy, eproverPath, problemPath, state_dim=5, soft_cpu_limit=1, cpu_li
     if dryRun:
         return " ".join(command_args)
 
-    if verbose and not create_info:
-        p = subprocess.Popen(command_args, env=makeEnv(workerId))
-        if policy is not None:
-            communicateWithE(policy, workerId, state_dim)
-        p.wait()
-        return
+    # if verbose and not create_info:
+    #     p = subprocess.Popen(command_args, env=makeEnv(workerId)) # calls E
+    #     if policy is not None:
+    #         # communicateWithE(policy, workerId, state_dim)
+    #         execute_with_timeout(policy, workerId, state_dim, p, int(cpu_limit*1.5))
+    #     p.wait()
+    #     return
 
     # Run E itself with the args specified above.
     t1 = time()
@@ -311,7 +352,7 @@ def runE(policy, eproverPath, problemPath, state_dim=5, soft_cpu_limit=1, cpu_li
 
     # Interact with E via named pipes using "policy" to map states to actions.
     if policy is not None:
-        communicateWithE(policy, workerId, state_dim)
+        timed_out = not communicate_with_timeout(policy, workerId, state_dim, p, int(cpu_limit*1.5))
 
     # Finish reading E's stdout/stderr
     thread.join()
@@ -513,12 +554,6 @@ def sendUnsentEpisodes(profiler, processes, sentCount, episode_queue, info_queue
             sentCount += 1
     
     return sentCount
-
-
-
-
-
-
 
 
 
