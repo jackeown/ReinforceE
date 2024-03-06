@@ -540,6 +540,7 @@ if __name__ == "__main__":
 		"AutoSched": r"\_AutoSched",
 		"RoundRobin": r"\_Master",
 		"RoundRobinAllOnes": r"\_MasterAllOnes",
+		"RoundRobinIncremental": r"\_MasterIncremental",
 		
 		"ConstCatAudit": r"\_ConstCatAudit",
 		"NNAudit": r"\_NNAudit",
