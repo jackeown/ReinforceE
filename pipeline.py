@@ -52,8 +52,8 @@ VBT_CPU_LIMIT_STR =            f"--soft_cpu_limit={VBT_CPU_LIMIT} --cpu_limit={V
 VBT_CPU_LIMIT_MODEL_STR =      f"--soft_cpu_limit={VBT_CPU_LIMIT+15} --cpu_limit={VBT_CPU_LIMIT+20}"
 
 
-# mem_size=20
-mem_size=1
+mem_size=20
+# mem_size=1
 state_dim = mem_size*5
 # old settings...
 # common_flags = f"--num_workers=6 --entropy_weight=2e-6 --max_blame=6000 --lr=3e-6 --n_layers=3 --n_units=100 --epochs=1 --batch_size=8 --ppo_batch_size=512 --LAMBDA=0.96 --state_dim={state_dim}"
