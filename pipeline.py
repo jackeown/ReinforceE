@@ -59,7 +59,7 @@ state_dim = mem_size*5
 # common_flags = f"--num_workers=6 --entropy_weight=2e-6 --max_blame=6000 --lr=3e-6 --n_layers=3 --n_units=100 --epochs=1 --batch_size=8 --ppo_batch_size=512 --LAMBDA=0.96 --state_dim={state_dim}"
 
 # modelled after local testing on MPTPTP2078
-common_flags = f"--num_workers=6 --entropy_weight=0.001 --critic_weight=0.1 --max_blame=90000 --n_layers=2 --n_units=50 --epochs=1 --batch_size=5 --ppo_batch_size=128 --LAMBDA=0.987 --discount_factor=0.998 --state_dim={state_dim} "
+common_flags = f"--num_workers=6 --entropy_weight=0.001 --critic_weight=0.1 --max_blame=50000 --n_layers=2 --n_units=50 --epochs=1 --batch_size=5 --ppo_batch_size=128 --LAMBDA=0.987 --discount_factor=0.998 --state_dim={state_dim} "
 common_flags += f"--max_train_steps=4500"
 
 TMP_CPU_LIMIT_MODEL_STR = "--soft_cpu_limit=5 --cpu_limit=10"
