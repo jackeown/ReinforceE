@@ -59,7 +59,7 @@ state_dim = mem_size*5
 # common_flags = f"--num_workers=6 --entropy_weight=2e-6 --max_blame=6000 --lr=3e-6 --n_layers=3 --n_units=100 --epochs=1 --batch_size=8 --ppo_batch_size=512 --LAMBDA=0.96 --state_dim={state_dim}"
 
 # modelled after local testing on MPTPTP2078
-common_flags = f"--num_workers=6 --entropy_weight=0.001 --critic_weight=0.1 --max_blame=50000 --n_layers=2 --n_units=50 --epochs=1 --batch_size=5 --ppo_batch_size=128 --LAMBDA=0.987 --discount_factor=0.998 --state_dim={state_dim} "
+common_flags = f"--num_workers=8 --entropy_weight=0.001 --critic_weight=0.1 --max_blame=50000 --n_layers=2 --n_units=80 --epochs=1 --batch_size=5 --ppo_batch_size=128 --LAMBDA=0.987 --discount_factor=0.998 --state_dim={state_dim} "
 common_flags += f"--max_train_steps=4500"
 
 TMP_CPU_LIMIT_MODEL_STR = "--soft_cpu_limit=5 --cpu_limit=10"
@@ -70,7 +70,7 @@ train_experiments = [
     # f'python tmux_magic_main.py --main_args="{common_flags} --lr=8e-4 {MPT_CPU_LIMIT_MODEL_STR} --policy_type=nn --eprover_path=eprover_RL_HIST_1 {MPTPStratFile} --auto" {MPTPPath} MPTNN1Hist',
     # f'python tmux_magic_main.py --main_args="{common_flags} --lr=8e-4 {VBT_CPU_LIMIT_MODEL_STR} --policy_type=nn --eprover_path=eprover_RL_HIST_1 {VBTStratFile} --auto" {VBTPath} VBTNN1Hist',
 
-    f'python tmux_magic_main.py --main_args="{common_flags} --lr=8e-4 {MPT_CPU_LIMIT_MODEL_STR} --policy_type=nn --eprover_path=eprover_RL_HIST {MPTPStratFile} --auto" {MPTPPath} MPTNN20Hist',
+    f'python tmux_magic_main.py --main_args="{common_flags} --lr=4e-4 {MPT_CPU_LIMIT_MODEL_STR} --policy_type=nn --eprover_path=eprover_RL_HIST {MPTPStratFile} --auto" {MPTPPath} MPTNN20Hist',
 
 
     # Constant Categorical Distribution
