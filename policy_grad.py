@@ -443,7 +443,7 @@ class PolicyNet(nn.Module):
         self.stateSize = inDim
         self.numActions = outDim
 
-        newIndim = inDim if inDim <= 5 else 5 + outDim + ((inDim -5) // 5)*4
+        newIndim = inDim if inDim <= 5 else 5 + self.numActions + ((inDim - 5) // 5)*4
         # newIndim = 5 + outDim
 
         self.inputDropout = nn.Dropout(dropoutProb)
@@ -493,11 +493,17 @@ class PolicyNet(nn.Module):
 
         # 3.) Add back actual current state (last 5 features)
         current_state = state[:, -5:]
-        pSizes = state[:, 0:-5:5]
-        uSizes = state[:, 1:-5:5]
-        pWeights = state[:, 2:-5:5]
-        uWeights = state[:, 3:-5:5]
-        newState = torch.cat([oneHotsSummed, current_state, pSizes, uSizes, pWeights, uWeights], dim=1)
+        # pSizes = state[:, 0:-5:5]
+        # uSizes = state[:, 1:-5:5]
+        # pWeights = state[:, 2:-5:5]
+        # uWeights = state[:, 3:-5:5]
+        # newState = torch.cat([oneHotsSummed, current_state, pSizes, uSizes, pWeights, uWeights], dim=1)
+
+        # 3.) Add back actual current state (last 5 features)
+        # More efficient due to reshaping and one slice:
+        reshaped = state.reshape(state.shape[0],-1,5)
+        withoutActions = reshaped[:,:,:-1]
+        newState = torch.cat([oneHotsSummed, withoutActions.reshape(state.shape[0],-1)], dim=1)
 
         if verbose:
             pprint("Action Features", actionFeatures)
