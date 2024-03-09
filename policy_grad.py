@@ -501,8 +501,7 @@ class PolicyNet(nn.Module):
 
         # 3.) Add back actual current state (last 5 features)
         # More efficient due to reshaping and one slice:
-        reshaped = state.reshape(state.shape[0],-1,5)
-        withoutActions = reshaped[:,:,:-1]
+        withoutActions = state.view(state.shape[0],-1,5)[:,:,:-1]
         newState = torch.cat([oneHotsSummed, withoutActions.reshape(state.shape[0],-1)], dim=1)
 
         if verbose:
