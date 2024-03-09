@@ -287,7 +287,7 @@ def communicate_with_timeout(policy, workerId, state_dim, subprocess, timeout):
             subprocess.terminate()  # Ensure the subprocess is terminated
         except ProcessLookupError:
             print("eprover Subprocess already terminated.")
-            
+
         thread.join()  # Wait for the thread to clean up
         return False  # Indicate that a timeout occurred
     return True  # Indicate successful completion
@@ -601,7 +601,7 @@ def waitForLearner(profiler, episode_queue, message_queue, processes, sentCount)
                     sleepTimes[i] = 0
 
             for i in range(len(sleepTimes) - 1, -1, -1):  # Iterate in reverse to avoid index errors
-                if sleepTimes[i] > 2*args.cpu_limit*(1/dt):
+                if sleepTimes[i] > 2*args.cpu_limit*(1/dt) and i < args.num_workers:
                     message = f"We've waited 120 seconds for process {sentCount + i}. Aborting."
                     message_queue.put(message)
                     print(message)
