@@ -500,9 +500,9 @@ class PolicyNet(nn.Module):
         # newState = torch.cat([oneHotsSummed, current_state, pSizes, uSizes, pWeights, uWeights], dim=1)
 
         # 3.) Add back actual current state (last 5 features)
-        # More efficient due to reshaping and one slice:
-        withoutActions = state.view(state.shape[0],-1,5)[:,:,:-1]
-        newState = torch.cat([oneHotsSummed, withoutActions.reshape(state.shape[0],-1)], dim=1)
+        # More efficient approach maybe?:
+        histMinusActions = state.view(state.shape[0],-1,5)[:,:-1,:-1] # first -1 means don't include current state, and second -1 means don't include actions
+        newState = torch.cat([oneHotsSummed, histMinusActions.reshape(state.shape[0],-1), current_state], dim=1)
 
         if verbose:
             pprint("Action Features", actionFeatures)
