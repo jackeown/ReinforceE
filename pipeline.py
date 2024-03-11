@@ -70,7 +70,7 @@ train_experiments = [
     # f'python tmux_magic_main.py --main_args="{common_flags} --lr=8e-4 {MPT_CPU_LIMIT_MODEL_STR} --policy_type=nn --eprover_path=eprover_RL_HIST_1 {MPTPStratFile} --auto" {MPTPPath} MPTNN1Hist',
     # f'python tmux_magic_main.py --main_args="{common_flags} --lr=8e-4 {VBT_CPU_LIMIT_MODEL_STR} --policy_type=nn --eprover_path=eprover_RL_HIST_1 {VBTStratFile} --auto" {VBTPath} VBTNN1Hist',
 
-    f'python tmux_magic_main.py --main_args="{common_flags} --lr=4e-4 {MPT_CPU_LIMIT_MODEL_STR} --policy_type=nn --eprover_path=eprover_RL_HIST {MPTPStratFile} --auto" {MPTPPath} MPTNN20Hist',
+    # f'python tmux_magic_main.py --main_args="{common_flags} --lr=4e-4 {MPT_CPU_LIMIT_MODEL_STR} --policy_type=nn --eprover_path=eprover_RL_HIST {MPTPStratFile} --auto" {MPTPPath} MPTNN20Hist',
 
 
     # Constant Categorical Distribution
@@ -98,6 +98,8 @@ test_experiments = [
     # f'python tmux_magic_main.py --main_args="{common_flags} {MPT_CPU_LIMIT_STR} --auto_sched --policy_type=none --eprover_path=eprover" {MPTPPath} MPTAutoSched --test',
     # f'python tmux_magic_main.py --main_args="{common_flags} {MPT_CPU_LIMIT_MODEL_STR} --auto --policy_type=constcat --eprover_path=eprover_RL_HIST_1 {MPTPStratFile}" {MPTPPath} MPTConstCat1Hist --test',
     # f'python tmux_magic_main.py --main_args="{common_flags} {MPT_CPU_LIMIT_MODEL_STR} --auto --policy_type=nn --eprover_path=eprover_RL_HIST_1 {MPTPStratFile}" {MPTPPath} MPTNN1Hist --test',
+
+    f'python tmux_magic_main.py --main_args="{common_flags} {MPT_CPU_LIMIT_MODEL_STR} --auto --policy_type=nn --eprover_path=eprover_RL_HIST {MPTPStratFile}" {MPTPPath} MPTNN20Hist --test',
 
     # # SLH Experiments...
     # f'python tmux_magic_main.py --main_args="{common_flags} {SLH_CPU_LIMIT_STR} --auto --policy_type=none --eprover_path=eprover-ho {SLHStratFile}" {SLHPath} SLHRoundRobin --test',
@@ -128,9 +130,9 @@ test_experiments = [
     # f'python tmux_magic_main.py --main_args="{common_flags} --test_num=1 {VBT_CPU_LIMIT_STR} --auto --policy_type=none --eprover_path=eprover {VBTSuccessStratFileRR}" {VBTPath} VBTSuccessRoundRobinAllOnes --test',
 
     # MasterIncremental Experiments...
-    f'python tmux_magic_main.py --main_args="{common_flags} --test_num=1 {VBT_CPU_LIMIT_STR} --auto --policy_type=none --eprover_path=eprover {VBT_Incremental_StratDir}" {VBTPath} VBTRoundRobinIncremental --test',
-    f'python tmux_magic_main.py --main_args="{common_flags} --test_num=1 {MPT_CPU_LIMIT_STR} --auto --policy_type=none --eprover_path=eprover {MPT_Incremental_StratDir}" {MPTPPath} MPTRoundRobinIncremental --test',
-    f'python tmux_magic_main.py --main_args="{common_flags} --test_num=1 {SLH_CPU_LIMIT_STR} --auto --policy_type=none --eprover_path=eprover-ho {SLH_Incremental_StratDir}" {SLHPath} SLHRoundRobinIncremental --test',
+    # f'python tmux_magic_main.py --main_args="{common_flags} --test_num=1 {VBT_CPU_LIMIT_STR} --auto --policy_type=none --eprover_path=eprover {VBT_Incremental_StratDir}" {VBTPath} VBTRoundRobinIncremental --test',
+    # f'python tmux_magic_main.py --main_args="{common_flags} --test_num=1 {MPT_CPU_LIMIT_STR} --auto --policy_type=none --eprover_path=eprover {MPT_Incremental_StratDir}" {MPTPPath} MPTRoundRobinIncremental --test',
+    # f'python tmux_magic_main.py --main_args="{common_flags} --test_num=1 {SLH_CPU_LIMIT_STR} --auto --policy_type=none --eprover_path=eprover-ho {SLH_Incremental_StratDir}" {SLHPath} SLHRoundRobinIncremental --test',
 
 ]
 
