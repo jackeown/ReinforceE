@@ -162,8 +162,8 @@ test_experiments = [
 #     ]
 
 # experiments_to_run = train_experiments + test_experiments + distill_experiments
-experiments_to_run = train_experiments
-# experiments_to_run = test_experiments
+# experiments_to_run = train_experiments
+experiments_to_run = test_experiments
 # experiments_to_run = distill_experiments
 
 # Check that CPU is not too busy
