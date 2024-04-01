@@ -538,7 +538,7 @@ if __name__ == "__main__":
 		"ConstCatDistilled_gain5_": r"\_Distilled",
 		"Auto": r"\_Auto",
 		"AutoSched": r"\_AutoSched",
-		"RoundRobin": r"\_Master",
+		"RoundRobin": r"\_MasterWeighted",
 		"RoundRobinAllOnes": r"\_MasterAllOnes",
 		"RoundRobinIncremental": r"\_MasterIncremental",
 		
@@ -552,6 +552,8 @@ if __name__ == "__main__":
 
 		"NN1Hist": r"\_NeuralNet",
 		"ConstCat1Hist": r"\_ConstCat",
+		"CommonHeuristic": r"\_CommonHeuristic",
+		"CommonElse": r"\_CommonElse"
 	}
 
 	def subFunc(runName):
