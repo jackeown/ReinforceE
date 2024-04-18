@@ -1,5 +1,5 @@
 
-from collections import defaultdict
+from collections import defaultdict, deque
 import os, re, struct, sys, shutil
 import argparse
 import subprocess, threading
@@ -28,7 +28,12 @@ import IPython
 from my_profiler import Profiler
 from helpers import Episode, mean, initPipe, normalizeState, start_logging_process, saveToDir
 from e_caller import ECallerHistory, extractStatus, extractProcessedCount, extractOverhead, getStates, getActions, getRewards, getGivenClauses
-from policy_grad import PolicyNet, PolicyNetConstCategorical, PolicyNetUniform, PolicyNetAttn, optimize_step_ppo, select_action, calculateReturnsAndAdvantageEstimate, DummyProfiler
+from policy_grad import PolicyNet, PolicyNetDQN, PolicyNetConstCategorical, PolicyNetUniform, PolicyNetAttn, DummyProfiler
+# from policy_grad import optimize_step_ppo, select_action, calculateReturnsAndAdvantageEstimate
+from policy_grad import optimize_step_dqn as optimize_step_ppo, \
+                        select_action_dqn as select_action, \
+                        calculate_returns_dqn as calculateReturnsAndAdvantageEstimate
+
 
 
 dummyProfiler = DummyProfiler()
@@ -471,6 +476,8 @@ def getPolicy(log=False):
             policy = PolicyNetUniform(args.CEF_no)
         elif args.policy_type == "attn":
             policy = PolicyNetAttn(args.state_dim, args.CEF_no, args.n_units)
+        elif args.policy_type == "dqn":
+            policy = PolicyNetDQN(args.state_dim, args.n_units, args.CEF_no, args.n_layers)
         else:
             print(f"No Policy Being Used!!!: args.policy_type = {args.policy_type}")
 
@@ -590,8 +597,8 @@ def waitForLearner(profiler, episode_queue, message_queue, processes, sentCount)
             message += f"\n Unsent Procs: {''.join(['1' if x.ready() else '0' for x in unsentProcs])}"
             message += f"\n sleepTimes: {sleepTimes}"
             message_queue.put(message)
-            if random.random() < dt:
-                print(message)
+            # if random.random() < dt:
+            #     print(message)
             sleep(dt)
             
             for i,proc in enumerate(unsentProcs):
@@ -604,7 +611,7 @@ def waitForLearner(profiler, episode_queue, message_queue, processes, sentCount)
                 if sleepTimes[i] > 2*args.cpu_limit*(1/dt) and i < args.num_workers:
                     message = f"We've waited 120 seconds for process {sentCount + i}. Aborting."
                     message_queue.put(message)
-                    print(message)
+                    # print(message)
                     
                     # Remove ith element from unsentProcs
                     del unsentProcs[i]
@@ -613,7 +620,7 @@ def waitForLearner(profiler, episode_queue, message_queue, processes, sentCount)
                     
                     message = f"Process {sentCount + i} removed. Remaining processes: {len(unsentProcs)}"
                     message_queue.put(message)
-                    print(message)
+                    # print(message)
 
                     
 
@@ -741,8 +748,24 @@ def addEpisodeToBatch(profiler, ep, batch, message_queue):
         with profiler.profile("<t> Normalizing State"):
             if not args.lunar_lander:
                 states = normalizeState(states)
-        batch.append([states, actions, returns, advantages, log_probs, values])
 
+        toAppend = [states, actions, returns, advantages, log_probs, values]
+        if args.policy_type == "dqn":
+            next_states = states[1:]
+            next_states = torch.cat([next_states, 3.14159*torch.ones(1, states.shape[1])], dim=0) # a fake next state that will be detectable during training.
+            toAppend.append(next_states)
+
+        batch.append(toAppend)
+
+
+
+
+def update_rollout_buffer(buff, newStuff):
+    print(f"Current rollout buffer LENGTH {len(buff)}")
+    while len(buff) > 1_000_000:
+        buff.popleft()
+    
+    buff.extend(newStuff)
 
 
 def train_policy_process(policy, opt, episode_queue, policy_queue, info_queue, keep_training_queue, message_queue, profiler_queue, stop_event, episode_read):
@@ -760,6 +783,10 @@ def train_policy_process(policy, opt, episode_queue, policy_queue, info_queue, k
     shutil.rmtree(model_history_dir, ignore_errors=True)
     os.makedirs(model_history_dir, exist_ok=True)
 
+    # need both for DQN with a target net.
+    rollout_buffers = [deque(),deque()]
+    rollout_buffer = rollout_buffers[0]
+
     while keepTraining(train_policy_process.everSolved, batches_processed,  args.train_patience, args.max_train_steps, keep_training_queue):
         print(f"train main loop {i}")
         i += 1
@@ -774,8 +801,18 @@ def train_policy_process(policy, opt, episode_queue, policy_queue, info_queue, k
             if len(batch) >= args.batch_size:
                 print(f"About to optimize step for {len(batch)} episodes")
                 with profiler.profile("<t> Optimize_step"):
+
+                    # Batch is a list of (states, actions, returns, advantages, log_probs, values) tuples
+                    # unzipped is then (all_states, all_actions, all_returns, all_advantages, all_log_probs, all_values)
+                    # list(zip(*unzipped)) is then the same as batch, but the the original components catted into tensors.
+
                     unzipped = [torch.cat(X, dim=0) for X in zip(*batch)]
-                    rollout_buffer = list(zip(*unzipped))
+
+                    if args.policy_type == "dqn":
+                        update_rollout_buffer(rollout_buffer, list(zip(*unzipped)))
+                    else:
+                        rollout_buffer = list(zip(*unzipped))
+
                     batches_processed += 1
                     info_queue.put((
                         opt, 
@@ -811,7 +848,7 @@ def logTraining(loss):
     else:
         for mode in loss:
             if isinstance(logTraining.runningLoss[mode], Iterable):
-                logTraining.runningLoss[mode] = mean(logTraining.runningLoss[mode])
+                logTraining.runningLoss[mode] = mean(logTraining.runningLoss[mode]) if len(logTraining.runningLoss[mode]) > 0 else 0
             else:
                 logTraining.runningLoss[mode] = 0.99*logTraining.runningLoss[mode] + 0.01*loss[mode]
 
@@ -869,7 +906,10 @@ def TrainPolicy(problems, args):
             info = gather_info_queue.get()
             if info['solved']:
                 numSuccess += 1
-                dashboard.procCounts.append(info['processed_count'])
+                if args.lunar_lander:
+                    dashboard.procCounts.append(1)
+                else:
+                    dashboard.procCounts.append(info['processed_count'])
             else:
                 numFailure += 1
 
@@ -883,7 +923,7 @@ def TrainPolicy(problems, args):
             dashboard.updatePresatInfo(presat_info_queue.get())
 
         while train_info_queue.qsize() > 0:
-            print("Line 825 ..." + "#"*1000)
+            # print("Line 825 ..." + "#"*1000)
             worked = False
             try:
                 opt, policy, loss = train_info_queue.get()
@@ -1048,7 +1088,7 @@ if __name__ == "__main__":
     parser.add_argument("--model_path", default="latest_model.pt")
     parser.add_argument("--opt_path", default="latest_model_opt.pt")
     parser.add_argument("--opt_type", default="adam", choices=["adam", "sgd", "rmsprop", "adagrad"])
-    parser.add_argument("--policy_type", default="nn", choices=["nn", "constcat", "none", "uniform", "attn"])
+    parser.add_argument("--policy_type", default="nn", choices=["nn", "constcat", "none", "uniform", "attn", "dqn"])
     
     parser.add_argument("--state_dim", type=int, default=5)
     parser.add_argument("--CEF_no", type=int, default=-1, help="Number of cefs to use. -1 to load from strat_file")

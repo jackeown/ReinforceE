@@ -541,6 +541,7 @@ if __name__ == "__main__":
 		"RoundRobin": r"\_MasterWeighted",
 		"RoundRobinAllOnes": r"\_MasterAllOnes",
 		"RoundRobinIncremental": r"\_MasterIncremental",
+		"SuccessRoundRobin": r"\_MasterSuccess",
 		
 		"ConstCatAudit": r"\_ConstCatAudit",
 		"NNAudit": r"\_NNAudit",

@@ -1,14 +1,15 @@
 import gymnasium as gym
 import torch
 import time
+from policy_grad import select_action_dqn as select_action
 
 # policy = torch.load("good_lunar_policy.pt")
 policy = torch.load("latest_model.pt")
 
-def select_action(policy, state):
-	soft = torch.softmax(policy(state), dim=1)
-	dist = torch.distributions.Categorical(soft)
-	return dist.sample()
+#def select_action(policy, state):
+#	soft = torch.softmax(policy(state), dim=1)
+#	dist = torch.distributions.Categorical(soft)
+#	return dist.sample()
 
 
 
