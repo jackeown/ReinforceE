@@ -99,7 +99,7 @@ test_experiments = [
     # f'python tmux_magic_main.py --main_args="{common_flags} {MPT_CPU_LIMIT_MODEL_STR} --auto --policy_type=constcat --eprover_path=eprover_RL_HIST_1 {MPTPStratFile}" {MPTPPath} MPTConstCat1Hist --test',
     # f'python tmux_magic_main.py --main_args="{common_flags} {MPT_CPU_LIMIT_MODEL_STR} --auto --policy_type=nn --eprover_path=eprover_RL_HIST_1 {MPTPStratFile}" {MPTPPath} MPTNN1Hist --test',
 
-    f'python tmux_magic_main.py --main_args="{common_flags} {MPT_CPU_LIMIT_MODEL_STR} --auto --policy_type=nn --eprover_path=eprover_RL_HIST {MPTPStratFile}" {MPTPPath} MPTNN20Hist --test',
+    # f'python tmux_magic_main.py --main_args="{common_flags} {MPT_CPU_LIMIT_MODEL_STR} --auto --policy_type=nn --eprover_path=eprover_RL_HIST {MPTPStratFile}" {MPTPPath} MPTNN20Hist --test',
 
     # # SLH Experiments...
     # f'python tmux_magic_main.py --main_args="{common_flags} {SLH_CPU_LIMIT_STR} --auto --policy_type=none --eprover_path=eprover-ho {SLHStratFile}" {SLHPath} SLHRoundRobin --test',
@@ -133,6 +133,13 @@ test_experiments = [
     # f'python tmux_magic_main.py --main_args="{common_flags} --test_num=1 {VBT_CPU_LIMIT_STR} --auto --policy_type=none --eprover_path=eprover {VBT_Incremental_StratDir}" {VBTPath} VBTRoundRobinIncremental --test',
     # f'python tmux_magic_main.py --main_args="{common_flags} --test_num=1 {MPT_CPU_LIMIT_STR} --auto --policy_type=none --eprover_path=eprover {MPT_Incremental_StratDir}" {MPTPPath} MPTRoundRobinIncremental --test',
     # f'python tmux_magic_main.py --main_args="{common_flags} --test_num=1 {SLH_CPU_LIMIT_STR} --auto --policy_type=none --eprover_path=eprover-ho {SLH_Incremental_StratDir}" {SLHPath} SLHRoundRobinIncremental --test',
+
+
+    # MasterWeightedRoundRobin Experiments...
+    f'python tmux_magic_main.py --main_args="{common_flags} --test_num=1 {MPT_CPU_LIMIT_STR} --auto --policy_type=none --eprover_path=eprover_fair_round_robin {MPTPStratFile}" {MPTPPath} MPTMasterRR --test',
+    f'python tmux_magic_main.py --main_args="{common_flags} --test_num=1 {VBT_CPU_LIMIT_STR} --auto --policy_type=none --eprover_path=eprover_fair_round_robin {VBTStratFile}" {VBTPath} VBTMasterRR --test',
+    f'python tmux_magic_main.py --main_args="{common_flags} --test_num=1 {SLH_CPU_LIMIT_STR} --auto --policy_type=none --eprover_path=/home/jack/eprover/eprover_fair_round_robin/PROVER/eprover-ho {SLHStratFile}" {SLHPath} SLHMasterRR--test',
+
 
 ]
 

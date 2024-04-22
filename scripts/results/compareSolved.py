@@ -554,7 +554,9 @@ if __name__ == "__main__":
 		"NN1Hist": r"\_NeuralNet",
 		"ConstCat1Hist": r"\_ConstCat",
 		"CommonHeuristic": r"\_CommonHeuristic",
-		"CommonElse": r"\_CommonElse"
+		"CommonElse": r"\_CommonElse",
+
+		"MasterRR": r"\_MasterWeightedRR",
 	}
 
 	def subFunc(runName):
