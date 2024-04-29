@@ -138,7 +138,7 @@ test_experiments = [
     # MasterWeightedRoundRobin Experiments...
     f'python tmux_magic_main.py --main_args="{common_flags} --test_num=1 {MPT_CPU_LIMIT_STR} --auto --policy_type=none --eprover_path=eprover_fair_round_robin {MPTPStratFile}" {MPTPPath} MPTMasterRR --test',
     f'python tmux_magic_main.py --main_args="{common_flags} --test_num=1 {VBT_CPU_LIMIT_STR} --auto --policy_type=none --eprover_path=eprover_fair_round_robin {VBTStratFile}" {VBTPath} VBTMasterRR --test',
-    f'python tmux_magic_main.py --main_args="{common_flags} --test_num=1 {SLH_CPU_LIMIT_STR} --auto --policy_type=none --eprover_path=/home/jack/eprover/eprover_fair_round_robin/PROVER/eprover-ho {SLHStratFile}" {SLHPath} SLHMasterRR--test',
+    f'python tmux_magic_main.py --main_args="{common_flags} --test_num=1 {SLH_CPU_LIMIT_STR} --auto --policy_type=none --eprover_path=/home/jack/eprover/eprover_fair_round_robin/PROVER/eprover-ho {SLHStratFile}" {SLHPath} SLHMasterRR --test',
 
 
 ]
