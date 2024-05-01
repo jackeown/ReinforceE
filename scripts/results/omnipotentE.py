@@ -46,10 +46,10 @@ def encorporate(hist, merged):
 
 def mergeECallerHistories(prefix):
     # [0-9]* means it must have at least one digit after prefix. (To not include any past {prefix}Omnipotent)
-    toMerge = glob(f"./ECallerHistory/{prefix}[0-9]*") 
+    toMerge = glob(f"./ECallerHistory/{prefix}[0-9]*")
     merged = ECallerHistory()
     for hist in track(toMerge):
-        runName = os.path.split(hist)[1]
+        runName = os.path.split(hist)[1][:-1] # remove trailing slash?
         encorporate(ECallerHistory.load(hist), merged)
 
     merged.save(f"{prefix}Omnipotent")
