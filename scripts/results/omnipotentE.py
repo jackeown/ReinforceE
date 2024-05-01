@@ -27,7 +27,7 @@ def should_update(hist, prob, merged):
     if len(infos) == 0 or not infos[0]['solved']:
         return False
     
-    newly_solved = not merged_infos[0]['solved']
+    newly_solved = len(merged_infos) == 0 or not merged_infos[0]['solved']
     return newly_solved or (infos[0]['processed_count'] < merged_infos[0]['processed_count'])
 
 
