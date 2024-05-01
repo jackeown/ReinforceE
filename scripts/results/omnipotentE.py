@@ -54,7 +54,8 @@ def mergeECallerHistories(prefix):
 
 
     # Remove any empty info lists generated accidentally.
-    for key in merged.history:
+    keys = list(merged.history.keys())
+    for key in keys:
         if len(merged.history[key]) == 0:
             del merged.history[key]
 
