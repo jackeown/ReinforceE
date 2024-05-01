@@ -557,6 +557,7 @@ if __name__ == "__main__":
 		"CommonElse": r"\_CommonElse",
 
 		"MasterRR": r"\_MasterWeightedRR",
+		"StratOmnipotent": r"\_Omnipotent",
 	}
 
 	def subFunc(runName):
