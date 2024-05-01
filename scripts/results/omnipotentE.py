@@ -9,7 +9,7 @@
 # pick the best strategy for a problem from its set   #
 #######################################################
 
-import sys
+import os, sys
 sys.path.append('.')
 
 import argparse
@@ -49,6 +49,7 @@ def mergeECallerHistories(prefix):
     toMerge = glob(f"./ECallerHistory/{prefix}[0-9]*") 
     merged = ECallerHistory()
     for hist in track(toMerge):
+        runName = os.path.split(hist)[1]
         encorporate(ECallerHistory.load(hist), merged)
 
     merged.save(f"{prefix}Omnipotent")
