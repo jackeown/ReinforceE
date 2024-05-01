@@ -49,8 +49,8 @@ def mergeECallerHistories(prefix):
     toMerge = glob(f"./ECallerHistory/{prefix}[0-9]*")
     merged = ECallerHistory()
     for hist in track(toMerge):
-        runName = os.path.split(hist)[1][:-1] # remove trailing slash?
-        encorporate(ECallerHistory.load(hist), merged)
+        runName = os.path.split(hist)[1]
+        encorporate(ECallerHistory.load(runName), merged)
 
     merged.save(f"{prefix}Omnipotent")
 
