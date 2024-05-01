@@ -52,6 +52,12 @@ def mergeECallerHistories(prefix):
         runName = os.path.split(hist)[1]
         encorporate(ECallerHistory.load(runName), merged)
 
+
+    # Remove any empty info lists generated accidentally.
+    for key in merged.history:
+        if len(merged.history[key]) == 0:
+            del merged.history[key]
+
     merged.save(f"{prefix}Omnipotent")
 
 
