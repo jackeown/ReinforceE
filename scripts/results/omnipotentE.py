@@ -12,6 +12,8 @@
 import sys
 sys.path.append('.')
 
+import argparse
+
 from rich.progress import track
 
 from glob import glob
@@ -52,3 +54,11 @@ def mergeECallerHistories(prefix):
     merged.save(f"{prefix}Omnipotent")
 
 
+
+if __name__ == "__main__":
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--prefix", type=str, default="MPTStrat")
+    args = parser.parse_args()
+
+    mergeECallerHistories(args.prefix)
