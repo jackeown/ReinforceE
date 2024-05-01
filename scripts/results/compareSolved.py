@@ -32,7 +32,8 @@ def median(l):
 	return l[len(l)//2] if len(l)%2 == 1 else mean(l[len(l)//2 - 1 : len(l)//2 + 1])
 
 def medianOfNonZero(l):
-	return median([x for x in l if x != 0])
+	nonZero = [x for x in l if x != 0]
+	return median(nonZero) if len(nonZero) > 0 else -1_000_000
 
 def smartMean(l, low=1, high=90):
 	"""Return mean of data between 2 percentiles"""
