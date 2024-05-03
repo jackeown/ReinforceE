@@ -24,7 +24,7 @@ from collections import defaultdict
 
 
 
-def mergeHists(hists: dict[str, ECallerHistory]) -> list[ECallerHistory]:
+def mergeHists(hists):
     """
     Because of 5-fold cross-validation setup, each strategy is spread across
     5 ECallerHistory files. Like so:
