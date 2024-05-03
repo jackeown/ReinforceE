@@ -65,7 +65,9 @@ experiment_formats = [
 
 
 MPTExperiments = [experiment_formats[0](i) for i in range(len(uniqueStrats['mpt']))]
-experiments_to_run = MPTExperiments
+VBTExperiments = [experiment_formats[1](i) for i in range(len(uniqueStrats['vbt']))]
+SLHExperiments = [experiment_formats[2](i) for i in range(len(uniqueStrats['slh']))]
+experiments_to_run = VBTExperiments + SLHExperiments
 
 # Check that CPU is not too busy
 def too_busy(percent):
