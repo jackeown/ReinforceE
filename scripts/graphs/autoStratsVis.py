@@ -70,8 +70,8 @@ def makeHeatmap(args, hists):
     matrix = [[int(solved(hist, prob)) for prob in allProbs] for hist in hists]
 
 
-    plt.xlabel("Problems (Easy to Hard)")
-    plt.ylabel("Strategies (Best to Worst)")
+    plt.xlabel("Problems (Easy <-> Hard)")
+    plt.ylabel("Strategies (Worst <-> Best)")
 
     print("Plotting heatmap")
     # aspect ratio makes it more rectangular so it's a better figure...
