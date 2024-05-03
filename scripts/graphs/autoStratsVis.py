@@ -19,6 +19,38 @@ from e_caller import ECallerHistory
 
 from functools import reduce
 import matplotlib.pyplot as plt
+from collections import defaultdict
+
+
+
+
+def mergeHists(hists: dict[str, ECallerHistory]) -> list[ECallerHistory]:
+    """
+    Because of 5-fold cross-validation setup, each strategy is spread across
+    5 ECallerHistory files. Like so:
+
+    MPTStrat0 -> [MPTStrat00, MPTStrat01, MPTStrat02, MPTStrat03, MPTStrat04]
+    MPTStrat15 -> [MPTStrat150, MPTStrat151, MPTStrat152, MPTStrat153, MPTStrat154]
+    
+    This function regroups them into a single list of ECallerHistories, one per strategy
+    """
+
+    whichFold = lambda run: int(run[-1]) # 0, 1, 2, 3, or 4
+    whichStrat = lambda run: run[:-1]
+
+    groups = defaultdict(list)
+    for run in hists:
+        groups[whichStrat(run)].append(hists[run])
+
+    def merge(group):
+        group[0].merge(group[1:])
+        return group[0]
+
+    merged = [merge(group) for group in groups.values()]
+    return merged
+
+
+
 
 
 
@@ -57,6 +89,9 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     histFiles = glob(f"./ECallerHistory/{args.prefix}[0-9]*")
-    hists = [ECallerHistory.load(os.path.split(x)[1]) for x in track(histFiles)]
 
+    name = lambda x: os.path.split(x)[1]
+    hists = {name(x):ECallerHistory.load(name(x)) for x in track(histFiles)}
+
+    hists = mergeHists(hists)
     makeHeatmap(args, hists)
