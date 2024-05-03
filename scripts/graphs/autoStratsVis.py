@@ -67,7 +67,7 @@ def makeHeatmap(args, hists):
     allProbs = sorted(allProbs, key=countHists)
 
     print("Making heatmap")
-    matrix = [[int(solved(hist, prob)) for prob in allProbs] for hist in hists]
+    matrix = [[int(not solved(hist, prob)) for prob in allProbs] for hist in hists]
 
 
     plt.xlabel("Problems")
