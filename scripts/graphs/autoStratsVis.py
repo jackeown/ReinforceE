@@ -35,7 +35,6 @@ def mergeHists(hists):
     This function regroups them into a single list of ECallerHistories, one per strategy
     """
 
-    whichFold = lambda run: int(run[-1]) # 0, 1, 2, 3, or 4
     whichStrat = lambda run: run[:-1]
 
     groups = defaultdict(list)
@@ -78,7 +77,7 @@ def makeHeatmap(args, hists):
     # aspect ratio makes it more rectangular so it's a better figure...
     plt.imshow(matrix, cmap='Greys', interpolation='nearest', aspect=7)
     os.makedirs("figures/autoStrats", exist_ok=True)
-    plt.savefig(f"figures/autoStrats/{args.prefix}.png")
+    plt.savefig(f"figures/autoStrats/{args.prefix}.png", dpi=300)
 
 
     
