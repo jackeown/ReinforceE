@@ -60,18 +60,18 @@ def makeHeatmap(args, hists):
     countHists = lambda prob: len([1 for hist in hists if solved(hist, prob)])
 
     print("Sorting hists by number of solved probs")
-    hists = sorted(hists, key=countSolved)
+    hists = sorted(hists, key=countSolved, reverse=True) # best strategies on top
 
     print("Sorting probs by number of solved hists")
     allProbs = reduce(lambda x,y: x | y, [set(hist.history.keys()) for hist in hists])
-    allProbs = sorted(allProbs, key=countHists)
+    allProbs = sorted(allProbs, key=countHists, reverse=True) # easy problems on left
 
     print("Making heatmap")
-    matrix = [[int(not solved(hist, prob)) for prob in allProbs] for hist in hists]
+    matrix = [[int(solved(hist, prob)) for prob in allProbs] for hist in hists]
 
 
-    plt.xlabel("Problems")
-    plt.ylabel("Strategies")
+    plt.xlabel("Problems (Easy to Hard)")
+    plt.ylabel("Strategies (Best to Worst)")
 
     print("Plotting heatmap")
     # aspect ratio makes it more rectangular so it's a better figure...
