@@ -24,7 +24,7 @@ import matplotlib.pyplot as plt
 
 def makeHeatmap(args, hists):
 
-    solved = lambda hist, problem: hist.history[problem] and hist.history[problem][0]['solved']
+    solved = lambda hist, problem: len(hist.history[problem])>0 and hist.history[problem][0]['solved']
     countSolved = lambda hist: len([1 for prob in hist.history if solved(hist, prob)])
     countHists = lambda prob: len([1 for hist in hists if solved(hist, prob)])
 
