@@ -120,7 +120,8 @@ if __name__ == "__main__":
             elapsedHours = (time.time() - t1) / 3600
             expRate = i / elapsedHours # i experiments completed so far in elapsedHours time
             safediv = lambda a, b: -1 if b == 0 else a / b
-            print(f"Elapsed: {time.time() - t1}, ETA: {safediv(len(experiments_to_run), expRate)} hours")
+            hoursRemaining = safediv(len(experiments_to_run), expRate)
+            print(f"Elapsed: {elapsedHours}, ETA: {hoursRemaining} hours ({hoursRemaining / 24} days)")
             i += 1
             sleep(500)
 
