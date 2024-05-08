@@ -12,6 +12,7 @@
 import os, sys
 sys.path.append(".")
 
+import random
 import argparse
 from rich.progress import track
 from glob import glob
@@ -20,6 +21,7 @@ from e_caller import ECallerHistory
 from functools import reduce
 import matplotlib.pyplot as plt
 from collections import defaultdict
+import numpy as np
 
 
 
@@ -68,29 +70,88 @@ def makeHeatmap(args, hists):
 
     print("Making heatmap")
     matrix = [[int(solved(hist, prob)) for prob in allProbs] for hist in hists]
+    return matrix
 
 
-    plt.xlabel("Problems (Easy <-> Hard)")
-    plt.ylabel("Strategies (Worst <-> Best)")
+
+def sigmoid(x):
+    return 1 / (1 + np.exp(-x))
+
+def makeDummyHeatmap(numStrats=60, numProbs=2078):
+    gainP, gainS = 30, 0.5
+    midP, midS = numProbs // 2, numStrats // 2
+    bias = lambda i: np.tanh(gainS*(i-midS)/numStrats)*0.1
+    p = lambda j: sigmoid(gainP*(j-midP)/numProbs)
+    
+    original = np.array([[random.random() + bias(i) < p(j) for j in range(numProbs)] for i in range(numStrats)])
+
+    # sort rows by their sums:
+    rowsSorted = original[np.argsort(original.sum(axis=1))[::-1]]
+
+    # now sort the columns of rowsSorted by the sum of each column:
+    colsSorted = rowsSorted[:, np.argsort(rowsSorted.sum(axis=0))[::-1]]
+
+    return colsSorted
+
+
+
+
+
+
+
+def plotHeatmap(matrix):
+    plt.xlabel("Problems (Easy <-> Hard)", fontsize=7)
+    plt.ylabel("Strategies (Worst <-> Best)", fontsize=7)
 
     print("Plotting heatmap")
-    # aspect ratio makes it more rectangular so it's a better figure...
+
+    rowSums = np.sum(matrix, axis=1)
+    rowSumYs = np.arange(len(rowSums))
+
     plt.imshow(matrix, cmap='Greys', interpolation='nearest', aspect=7)
+    plt.plot(rowSums, rowSumYs, label="Problems Solved", color='red', alpha=0.7)
+
+
+    # Vertical lines for showing:
+    # 1.) The number of problems solved by no strategy.
+    numSolvedByNone = np.sum(np.sum(matrix, axis=0) == 0) 
+    plt.vlines(len(matrix[0]) - numSolvedByNone, 0, len(matrix)-1, color='green', alpha=0.7, label="Auto Hindsight")
+
+    # 2.) The number of problems solved by all strategies.
+    numSolvedByAll = np.sum(np.sum(matrix, axis=0) == len(matrix))
+    plt.vlines(numSolvedByAll, 0, len(matrix)-1, color='blue', alpha=0.7, label="Solved by all")
+
+    # 3.) The number of problems solved by the best strategy:
+    numSolvedByBest = max(rowSums)
+    plt.vlines(numSolvedByBest, 0, len(matrix)-1, color='orange', alpha=0.7, label="Solved by best")
+
+
+
+    plt.tick_params(axis='both', which='minor', labelsize=7)
+    plt.tick_params(axis='both', which='major', labelsize=7)
+
+
+    # make a smaller legend:
+    plt.legend(fontsize=6)
+
     os.makedirs("figures/autoStrats", exist_ok=True)
     plt.savefig(f"figures/autoStrats/{args.prefix}.png", dpi=300)
 
 
-    
+
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('prefix', help="prefix for ECallerHistories to glob for")
+    parser.add_argument('--dry-run', action='store_true')
     args = parser.parse_args()
 
-    histFiles = glob(f"./ECallerHistory/{args.prefix}[0-9]*")
-
-    name = lambda x: os.path.split(x)[1]
-    hists = {name(x):ECallerHistory.load(name(x)) for x in track(histFiles)}
-
-    hists = mergeHists(hists)
-    makeHeatmap(args, hists)
+    if args.dry_run:
+        plotHeatmap(makeDummyHeatmap())
+    else:
+        histFiles = glob(f"./ECallerHistory/{args.prefix}[0-9]*")
+        name = lambda x: os.path.split(x)[1]
+        hists = {name(x):ECallerHistory.load(name(x)) for x in track(histFiles)}
+        hists = mergeHists(hists)
+        plotHeatmap(makeHeatmap(args, hists))
