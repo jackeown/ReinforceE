@@ -89,15 +89,20 @@ def runExperiment(exp):
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser()
-    parser.add_argument("--cpu_threshold", type=float, default=25.0)
+    parser.add_argument("--cpu_threshold", type=float, default=30.0)
     parser.add_argument("--dry_run", action="store_true")
     args = parser.parse_args()
 
+    
     if args.dry_run:
         for exp in experiments_to_run:
             print(exp)
             print("\n\n")
     else:
+        t1 = time.time()
+        n = len(experiments_to_run)
+
+        i=0
         while len(experiments_to_run):
             while too_busy(args.cpu_threshold):
                 
@@ -112,6 +117,11 @@ if __name__ == "__main__":
 
             runExperiment(experiments_to_run.pop(0))
             print("Remaining experiments: {}".format(len(experiments_to_run)))
+            elapsedHours = (time.time() - t1) / 3600
+            expRate = i / elapsedHours # i experiments completed so far in elapsedHours time
+            safediv = lambda a, b: -1 if b == 0 else a / b
+            print(f"Elapsed: {time.time() - t1}, ETA: {safediv(len(experiments_to_run), expRate)} hours")
+            i += 1
             sleep(500)
 
         
