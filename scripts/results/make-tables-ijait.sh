@@ -29,6 +29,6 @@ for ds in "${datasets[@]}"; do
         ${ds}CommonHeuristic ${ds}CommonElse \
         ${ds}Auto ${ds}AutoSched ${ds}AutoAll \
         ${ds}NN1Hist ${ds}ConstCat1Hist ${ds}ConstCatDistilled_gain5_ > ~/Desktop/ReinforceE/latexTables/${ds}_ijait.tex
-
+done
 echo "Finished!"
 

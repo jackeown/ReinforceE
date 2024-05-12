@@ -29,7 +29,7 @@ for ds in "${datasets[@]}"; do
         ${ds}CommonHeuristic ${ds}CommonElse \
         ${ds}Auto ${ds}AutoSched ${ds}AutoAll \
         ${ds}NN1Hist ${ds}ConstCat1Hist ${ds}ConstCatDistilled_gain5_ > ~/Desktop/ReinforceE/latexTables/${ds}.tex
-
+done
 echo "Finished!"
 
 
@@ -47,5 +47,4 @@ echo "Making more MPT NN heatmaps"
 ~/.pyenv/shims/python scripts/graphs/policyHeatmap.py MPTNN1Hist1 MPTNN1Hist1 --problem=MPT1539+1.p --dataset=MPT
 ~/.pyenv/shims/python scripts/graphs/policyHeatmap.py MPTNN1Hist1 MPTNN1Hist1 --problem=MPT1964+1.p --dataset=MPT
 
-echo "Finished!"
-
+echo "Finished!";

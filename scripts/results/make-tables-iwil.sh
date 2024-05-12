@@ -25,7 +25,7 @@ for ds in "${datasets[@]}"; do
         ${ds}RoundRobinAllOnes ${ds}RoundRobin ${ds}SuccessRoundRobin \
         ${ds}CommonHeuristic ${ds}CommonElse \
         ${ds}Auto ${ds}AutoSched ${ds}AutoAll > ~/Desktop/ReinforceE/latexTables/${ds}_iwil.tex
-
+done
 
 echo "Finished!"
 
