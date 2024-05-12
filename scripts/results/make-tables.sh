@@ -1,9 +1,39 @@
 #!/bin/bash
 
 # This is just a simple script to make the tables / figures in my dissertation:
+#########################
+# Experiments included: #
+#########################
+# MasterAllOnes = RoundRobinAllOnes
+# MasterWeighted = RoundRobin
+# MasterWeightedRR = MasterRR
+# MasterSuccess = SuccessRoundRobin
+# CommonHeuristic = CommonHeuristic
+# CommonElse = CommonElse
+# Auto = Auto
+# AutoSched = AutoSched
+# AutoAll = StratOmnipotent
+# NeuralNet = NN1Hist
+# ConstCat = ConstCat1Hist
+# Distilled = ConstCatDistilled_gain5_
 
-echo "Making MPT tables / figures"
-~/.pyenv/shims/python scripts/results/compareSolved.py MPTAuto MPTRoundRobin MPTRoundRobinAllOnes MPTNN1Hist MPTConstCat1Hist MPTConstCatDistilled_gain5_  --cv
+
+# define datasets "MPT", "VBT", "SLH" in bash array for loop:
+datasets=("MPT" "VBT" "SLH")
+
+# define experiments similarly:
+for ds in "${datasets[@]}"; do
+    echo "Making ${dataset} tables / figures"
+    ~/.pyenv/shims/python scripts/results/compareSolved.py --cv --ijait \
+        ${ds}RoundRobinAllOnes ${ds}RoundRobin ${ds}SuccessRoundRobin \
+        ${ds}CommonHeuristic ${ds}CommonElse \
+        ${ds}Auto ${ds}AutoSched ${ds}AutoAll \
+        ${ds}NN1Hist ${ds}ConstCat1Hist ${ds}ConstCatDistilled_gain5_ > ~/Desktop/ReinforceE/latexTables/${ds}.tex
+
+echo "Finished!"
+
+
+
 
 echo "Making MPT ConstCat heatmaps"
 ~/.pyenv/shims/python scripts/graphs/policyHeatmap.py MPTConstCat1Hist0 MPTConstCat1Hist0 --problem=MPT0557+1.p --dataset=MPT
@@ -16,13 +46,6 @@ echo "Making MPT NN heatmaps"
 echo "Making more MPT NN heatmaps"
 ~/.pyenv/shims/python scripts/graphs/policyHeatmap.py MPTNN1Hist1 MPTNN1Hist1 --problem=MPT1539+1.p --dataset=MPT
 ~/.pyenv/shims/python scripts/graphs/policyHeatmap.py MPTNN1Hist1 MPTNN1Hist1 --problem=MPT1964+1.p --dataset=MPT
-
-
-echo "Making VBT tables / figures"
-~/.pyenv/shims/python scripts/results/compareSolved.py VBTAuto VBTRoundRobin VBTRoundRobinAllOnes VBTNN1Hist VBTConstCat1Hist VBTConstCatDistilled_gain5_  --cv
-
-echo "Making SLH tables / figures"
-~/.pyenv/shims/python scripts/results/compareSolved.py SLHAuto SLHRoundRobin SLHRoundRobinAllOnes SLHNN1Hist SLHConstCat1Hist SLHConstCatDistilled_gain5_  --cv
 
 echo "Finished!"
 

@@ -99,7 +99,7 @@ def makeDummyHeatmap(numStrats=60, numProbs=2078):
 
 
 
-def plotHeatmap(matrix):
+def plotHeatmap(matrix, extraVlines={}):
     plt.xlabel("Problems (Easy <-> Hard)", fontsize=7)
     plt.ylabel("Strategies (Worst <-> Best)", fontsize=7)
 
@@ -125,6 +125,8 @@ def plotHeatmap(matrix):
     numSolvedByBest = max(rowSums)
     plt.vlines(numSolvedByBest, 0, len(matrix)-1, color='orange', alpha=0.7, label="Solved by best")
 
+    for k,v in extraVlines.items():
+        plt.vlines(v, 0, len(matrix)-1, color='purple', alpha=0.7, label=k)
 
 
     plt.tick_params(axis='both', which='minor', labelsize=7)

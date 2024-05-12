@@ -13,9 +13,6 @@
 # Auto = Auto
 # AutoSched = AutoSched
 # AutoAll = StratOmnipotent
-# NeuralNet = NN1Hist
-# ConstCat = ConstCat1Hist
-# Distilled = ConstCatDistilled_gain5_
 
 
 # define datasets "MPT", "VBT", "SLH" in bash array for loop:
@@ -24,11 +21,11 @@ datasets=("MPT" "VBT" "SLH")
 # define experiments similarly:
 for ds in "${datasets[@]}"; do
     echo "Making ${dataset} tables / figures"
-    ~/.pyenv/shims/python scripts/results/compareSolved.py --cv --ijait \
+    ~/.pyenv/shims/python scripts/results/compareSolved.py --cv --iwil \
         ${ds}RoundRobinAllOnes ${ds}RoundRobin ${ds}SuccessRoundRobin \
         ${ds}CommonHeuristic ${ds}CommonElse \
-        ${ds}Auto ${ds}AutoSched ${ds}AutoAll \
-        ${ds}NN1Hist ${ds}ConstCat1Hist ${ds}ConstCatDistilled_gain5_ > ~/Desktop/ReinforceE/latexTables/${ds}_ijait.tex
+        ${ds}Auto ${ds}AutoSched ${ds}AutoAll > ~/Desktop/ReinforceE/latexTables/${ds}_iwil.tex
+
 
 echo "Finished!"
 
