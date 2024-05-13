@@ -48,7 +48,7 @@ VBTPath =                       "--folds_path=/home/jack/Desktop/ATP/GCS/VBT/Fol
 VBT_CPU_LIMIT = 60
 VBT_CPU_LIMIT_STR =            f"--soft_cpu_limit={VBT_CPU_LIMIT} --cpu_limit={VBT_CPU_LIMIT+5}"
 
-common_flags = f"--num_workers=6 --entropy_weight=0.001 --critic_weight=0.1 --max_blame=50000 --n_layers=2 --n_units=80 --epochs=1 --batch_size=5 --ppo_batch_size=128 --LAMBDA=0.987 --discount_factor=0.998 --test_num=1"
+common_flags = f"--num_workers=8 --entropy_weight=0.001 --critic_weight=0.1 --max_blame=50000 --n_layers=2 --n_units=80 --epochs=1 --batch_size=5 --ppo_batch_size=128 --LAMBDA=0.987 --discount_factor=0.998 --test_num=1"
 
 
 
