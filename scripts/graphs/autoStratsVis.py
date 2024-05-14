@@ -159,6 +159,6 @@ if __name__ == "__main__":
     else:
         histFiles = glob(f"./ECallerHistory/{args.prefix}[0-9]*")
         name = lambda x: os.path.split(x)[1]
-        hists = {name(x):ECallerHistory.load(name(x)) for x in track(histFiles)}
+        hists = {name(x):ECallerHistory.load(name(x), keysToDeleteFromInfos={"stdout", "stderr", "states", "actions", "rewards"}) for x in track(histFiles)}
         hists = mergeHists(hists)
         plotHeatmap(makeHeatmap(args, hists), extraVlines=extraVlines)
