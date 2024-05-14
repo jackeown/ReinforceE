@@ -17,6 +17,7 @@ import argparse
 from rich.progress import track
 from glob import glob
 from e_caller import ECallerHistory
+from itertools import cycle
 
 from functools import reduce
 import matplotlib.pyplot as plt
@@ -115,7 +116,7 @@ def plotHeatmap(matrix, extraVlines={}):
     # Vertical lines for showing:
     # 1.) The number of problems solved by no strategy.
     numSolvedByNone = np.sum(np.sum(matrix, axis=0) == 0) 
-    plt.vlines(len(matrix[0]) - numSolvedByNone, 0, len(matrix)-1, color='green', alpha=0.7, label="Auto Hindsight")
+    plt.vlines(len(matrix[0]) - numSolvedByNone, 0, len(matrix)-1, color='green', alpha=0.7, label="AutoAll")
 
     # 2.) The number of problems solved by all strategies.
     numSolvedByAll = np.sum(np.sum(matrix, axis=0) == len(matrix))
@@ -125,8 +126,10 @@ def plotHeatmap(matrix, extraVlines={}):
     numSolvedByBest = max(rowSums)
     plt.vlines(numSolvedByBest, 0, len(matrix)-1, color='orange', alpha=0.7, label="Solved by best")
 
+
+    otherColors = cycle(['yellow', 'indigo', 'chartreuse', 'magenta', 'cyan', 'grey', 'black'])
     for k,v in extraVlines.items():
-        plt.vlines(v, 0, len(matrix)-1, color='purple', alpha=0.7, label=k)
+        plt.vlines(v, 0, len(matrix)-1, color=next(otherColors), alpha=0.7, label=k)
 
 
     plt.tick_params(axis='both', which='minor', labelsize=7)
