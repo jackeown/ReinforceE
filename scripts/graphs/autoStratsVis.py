@@ -142,18 +142,20 @@ def plotHeatmap(matrix, extraVlines={}):
 
 
 
-
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('prefix', help="prefix for ECallerHistories to glob for")
+    parser.add_argument('--extraVlines', help="e.g. MyMethod1:2435,MyMethod2:2358")
     parser.add_argument('--dry-run', action='store_true')
     args = parser.parse_args()
 
+    extraVlines = {x.split(":")[0]:int(x.split(":")[1]) for x in args.additionalVlines.split(",")}
+
     if args.dry_run:
-        plotHeatmap(makeDummyHeatmap())
+        plotHeatmap(makeDummyHeatmap(), extraVlines=extraVlines)
     else:
         histFiles = glob(f"./ECallerHistory/{args.prefix}[0-9]*")
         name = lambda x: os.path.split(x)[1]
         hists = {name(x):ECallerHistory.load(name(x)) for x in track(histFiles)}
         hists = mergeHists(hists)
-        plotHeatmap(makeHeatmap(args, hists))
+        plotHeatmap(makeHeatmap(args, hists), extraVlines=extraVlines)
