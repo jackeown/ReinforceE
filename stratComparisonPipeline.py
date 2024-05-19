@@ -48,7 +48,7 @@ VBTPath =                       "--folds_path=/home/jack/Desktop/ATP/GCS/VBT/Fol
 VBT_CPU_LIMIT = 60
 VBT_CPU_LIMIT_STR =            f"--soft_cpu_limit={VBT_CPU_LIMIT} --cpu_limit={VBT_CPU_LIMIT+5}"
 
-common_flags = f"--num_workers=8 --entropy_weight=0.001 --critic_weight=0.1 --max_blame=50000 --n_layers=2 --n_units=80 --epochs=1 --batch_size=5 --ppo_batch_size=128 --LAMBDA=0.987 --discount_factor=0.998 --test_num=1"
+common_flags = f"--num_workers=9 --entropy_weight=0.001 --critic_weight=0.1 --max_blame=50000 --n_layers=2 --n_units=80 --epochs=1 --batch_size=5 --ppo_batch_size=128 --LAMBDA=0.987 --discount_factor=0.998 --test_num=1"
 
 
 
@@ -67,7 +67,7 @@ experiment_formats = [
 MPTExperiments = [experiment_formats[0](i) for i in range(len(uniqueStrats['mpt']))]
 VBTExperiments = [experiment_formats[1](i) for i in range(len(uniqueStrats['vbt']))]
 SLHExperiments = [experiment_formats[2](i) for i in range(len(uniqueStrats['slh']))]
-experiments_to_run = SLHExperiments[31:] # VBTExperiments[28:] + SLHExperiments
+experiments_to_run = SLHExperiments[41:] # VBTExperiments[28:] + SLHExperiments
 
 # Check that CPU is not too busy
 def too_busy(percent):
@@ -89,7 +89,7 @@ def runExperiment(exp):
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser()
-    parser.add_argument("--cpu_threshold", type=float, default=30.0)
+    parser.add_argument("--cpu_threshold", type=float, default=35.0)
     parser.add_argument("--dry_run", action="store_true")
     args = parser.parse_args()
 
