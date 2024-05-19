@@ -59,7 +59,7 @@ def mergeECallerHistories(prefix):
         if len(merged.history[key]) == 0:
             del merged.history[key]
 
-    merged.save(f"{prefix}Omnipotent")
+    merged.save(f"{prefix}Omnipotent0") # the zero is so that it works with --cv in compareSolved.py
 
 
 

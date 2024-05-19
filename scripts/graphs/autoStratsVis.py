@@ -109,7 +109,7 @@ def plotHeatmap(matrix, extraVlines={}):
     rowSums = np.sum(matrix, axis=1)
     rowSumYs = np.arange(len(rowSums))
 
-    plt.imshow(matrix, cmap='Greys', interpolation='nearest', aspect=7)
+    plt.imshow(matrix, cmap='Greys', interpolation='nearest', aspect=10)
     plt.plot(rowSums, rowSumYs, label="Problems Solved", color='red', alpha=0.7)
 
 
@@ -136,8 +136,8 @@ def plotHeatmap(matrix, extraVlines={}):
     plt.tick_params(axis='both', which='major', labelsize=7)
 
 
-    # make a smaller legend:
-    plt.legend(fontsize=6)
+    # make a smaller legend that doesn't overlap with the plot:
+    plt.legend(fontsize=5, bbox_to_anchor=(1.05, 1), loc='upper left', borderaxespad=0.0)
 
     os.makedirs("figures/autoStrats", exist_ok=True)
     plt.savefig(f"figures/autoStrats/{args.prefix}.png", dpi=300)
