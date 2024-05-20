@@ -176,6 +176,7 @@ if __name__ == "__main__":
         # hists = {name(x):ECallerHistory.load(name(x), keysToDeleteFromInfos={"stdout", "stderr", "states", "actions", "rewards"}) for x in track(histFiles)}
         # load in parallel:
 
+        print(f"Loading {len(histFiles)} files...")
         from joblib import Parallel, delayed
         hists = Parallel(n_jobs=15,verbose=13)(delayed(ECallerHistory.load)(name(x), keysToDeleteFromInfos={"stdout", "stderr", "states", "actions", "rewards"}) for x in histFiles)
 
