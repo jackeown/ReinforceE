@@ -100,8 +100,8 @@ def makeDummyHeatmap(numStrats=60, numProbs=2078):
 
 
 
-def plotHeatmap(matrix, aspect, extraVlines={}):
-    plt.xlabel("Problems (Easy <-> Hard)", fontsize=7)
+def plotHeatmap(matrix, aspect, extraVlines={}, dataset=""):
+    plt.xlabel(f"{dataset} Problems (Easy <-> Hard)", fontsize=7)
     plt.ylabel("Strategies (Worst <-> Best)", fontsize=7)
 
     print("Plotting heatmap")
@@ -109,27 +109,29 @@ def plotHeatmap(matrix, aspect, extraVlines={}):
     rowSums = np.sum(matrix, axis=1)
     rowSumYs = np.arange(len(rowSums))
 
+    linewidth=0.7
+
     plt.imshow(matrix, cmap='Greys', interpolation='nearest', aspect=aspect)
-    plt.plot(rowSums, rowSumYs, label="Problems Solved", color='red', alpha=0.7)
+    plt.plot(rowSums, rowSumYs, label="Problems Solved", color='red', linewidth=linewidth, antialiased=False)
 
 
     # Vertical lines for showing:
     # 1.) The number of problems solved by no strategy.
-    numSolvedByNone = np.sum(np.sum(matrix, axis=0) == 0) 
-    plt.vlines(len(matrix[0]) - numSolvedByNone, 0, len(matrix)-1, color='green', alpha=0.7, label="AutoAll",linewidth=1)
+    numSolvedByNone = np.sum(np.sum(matrix, axis=0) == 0)
+    plt.vlines(len(matrix[0]) - numSolvedByNone, 0, len(matrix)-1, color='green', label="AutoAll",linewidth=linewidth, antialiased=False)
 
     # 2.) The number of problems solved by all strategies.
     numSolvedByAll = np.sum(np.sum(matrix, axis=0) == len(matrix))
-    plt.vlines(numSolvedByAll, 0, len(matrix)-1, color='blue', alpha=0.85, label="Solved by all", linewidth=1)
+    plt.vlines(numSolvedByAll, 0, len(matrix)-1, color='blue', label="Solved by all", linewidth=linewidth, antialiased=False)
 
     # 3.) The number of problems solved by the best strategy:
     numSolvedByBest = max(rowSums)
-    plt.vlines(numSolvedByBest, 0, len(matrix)-1, color='orange', alpha=0.85, label="Solved by best", linewidth=1)
+    plt.vlines(numSolvedByBest, 0, len(matrix)-1, color='orange', label="Solved by best", linewidth=linewidth, antialiased=False)
 
 
     otherColors = cycle(['yellow', 'indigo', 'chartreuse', 'magenta', 'cyan', 'pink', 'grey', 'black', 'dodgerblue'])
     for k,v in extraVlines.items():
-        plt.vlines(v, 0, len(matrix)-1, color=next(otherColors), alpha=0.85, label=k, linewidth=1)
+        plt.vlines(v, 0, len(matrix)-1, color=next(otherColors), label=k, linewidth=linewidth, antialiased=False)
 
 
     plt.tick_params(axis='both', which='minor', labelsize=7)
@@ -166,10 +168,11 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     extraVlines = {x.split(":")[0]:int(x.split(":")[1]) for x in args.extraVlines.split(",")}
+    dataset = args.prefix[:3]
 
     if args.dry_run:
         numStrats, numProbs = map(int, args.fakeHW.split(":"))
-        plotHeatmap(makeDummyHeatmap(numStrats, numProbs), args.aspect, extraVlines=extraVlines)
+        plotHeatmap(makeDummyHeatmap(numStrats, numProbs), args.aspect, extraVlines=extraVlines, dataset=dataset)
     else:
         histFiles = glob(f"./ECallerHistory/{args.prefix}[0-9]*")
         name = lambda x: os.path.split(x)[1]
@@ -182,4 +185,4 @@ if __name__ == "__main__":
         hists = {name(x):h for x,h in zip(histFiles, hists)}
 
         hists = mergeHists(hists)
-        plotHeatmap(makeHeatmap(args, hists), args.aspect, extraVlines=extraVlines)
+        plotHeatmap(makeHeatmap(args, hists), args.aspect, extraVlines=extraVlines, dataset=dataset)
