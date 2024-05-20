@@ -100,7 +100,7 @@ def makeDummyHeatmap(numStrats=60, numProbs=2078):
 
 
 
-def plotHeatmap(matrix, extraVlines={}):
+def plotHeatmap(matrix, aspect, extraVlines={}):
     plt.xlabel("Problems (Easy <-> Hard)", fontsize=7)
     plt.ylabel("Strategies (Worst <-> Best)", fontsize=7)
 
@@ -109,7 +109,7 @@ def plotHeatmap(matrix, extraVlines={}):
     rowSums = np.sum(matrix, axis=1)
     rowSumYs = np.arange(len(rowSums))
 
-    plt.imshow(matrix, cmap='Greys', interpolation='nearest', aspect=10)
+    plt.imshow(matrix, cmap='Greys', interpolation='nearest', aspect=aspect)
     plt.plot(rowSums, rowSumYs, label="Problems Solved", color='red', alpha=0.7)
 
 
@@ -127,7 +127,7 @@ def plotHeatmap(matrix, extraVlines={}):
     plt.vlines(numSolvedByBest, 0, len(matrix)-1, color='orange', alpha=0.7, label="Solved by best")
 
 
-    otherColors = cycle(['yellow', 'indigo', 'chartreuse', 'magenta', 'cyan', 'grey', 'black'])
+    otherColors = cycle(['yellow', 'indigo', 'green', 'chartreuse', 'magenta', 'cyan', 'pink', 'grey', 'black'])
     for k,v in extraVlines.items():
         plt.vlines(v, 0, len(matrix)-1, color=next(otherColors), alpha=0.7, label=k)
 
@@ -137,7 +137,19 @@ def plotHeatmap(matrix, extraVlines={}):
 
 
     # make a smaller legend that doesn't overlap with the plot:
-    plt.legend(fontsize=5, bbox_to_anchor=(1.05, 1), loc='upper left', borderaxespad=0.0)
+    # plt.legend(fontsize=5, bbox_to_anchor=(1.05, 1), loc='upper left', borderaxespad=0.0)
+    # plt.legend(loc='upper right', fontsize=5)
+
+    ax = plt.gca()
+    pos = ax.get_position()
+    # ax.set_position([pos.x0, pos.y0*1.5, pos.width, pos.height])
+    ax.legend(
+        fontsize=5,
+        loc='upper center', 
+        bbox_to_anchor=(0.5, 1.75),
+        ncol=3, 
+    )
+
 
     os.makedirs("figures/autoStrats", exist_ok=True)
     plt.savefig(f"figures/autoStrats/{args.prefix}.png", dpi=300)
@@ -150,15 +162,18 @@ if __name__ == "__main__":
     parser.add_argument('prefix', help="prefix for ECallerHistories to glob for")
     parser.add_argument('--extraVlines', default="", help="e.g. MyMethod1:2435,MyMethod2:2358")
     parser.add_argument('--dry-run', action='store_true')
+    parser.add_argument('--fakeHW', help="a:b for a being the number of strategies and b being the number of problems", default="60:8000")
+    parser.add_argument('--aspect', type=float, default=20.0)
     args = parser.parse_args()
 
     extraVlines = {x.split(":")[0]:int(x.split(":")[1]) for x in args.extraVlines.split(",")}
 
     if args.dry_run:
-        plotHeatmap(makeDummyHeatmap(), extraVlines=extraVlines)
+        numStrats, numProbs = map(int, args.fakeHW.split(":"))
+        plotHeatmap(makeDummyHeatmap(numStrats, numProbs), args.aspect, extraVlines=extraVlines)
     else:
         histFiles = glob(f"./ECallerHistory/{args.prefix}[0-9]*")
         name = lambda x: os.path.split(x)[1]
         hists = {name(x):ECallerHistory.load(name(x), keysToDeleteFromInfos={"stdout", "stderr", "states", "actions", "rewards"}) for x in track(histFiles)}
         hists = mergeHists(hists)
-        plotHeatmap(makeHeatmap(args, hists), extraVlines=extraVlines)
+        plotHeatmap(makeHeatmap(args, hists), args.aspect, extraVlines=extraVlines)
