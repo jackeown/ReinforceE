@@ -116,7 +116,6 @@ def plotHeatmap(matrix, aspect, extraVlines={}):
     # Vertical lines for showing:
     # 1.) The number of problems solved by no strategy.
     numSolvedByNone = np.sum(np.sum(matrix, axis=0) == 0) 
-    # thin lines using keyword arg: lin
     plt.vlines(len(matrix[0]) - numSolvedByNone, 0, len(matrix)-1, color='green', alpha=0.7, label="AutoAll",linewidth=1)
 
     # 2.) The number of problems solved by all strategies.
