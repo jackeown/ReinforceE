@@ -120,16 +120,16 @@ def plotHeatmap(matrix, aspect, extraVlines={}):
 
     # 2.) The number of problems solved by all strategies.
     numSolvedByAll = np.sum(np.sum(matrix, axis=0) == len(matrix))
-    plt.vlines(numSolvedByAll, 0, len(matrix)-1, color='blue', alpha=0.7, label="Solved by all")
+    plt.vlines(numSolvedByAll, 0, len(matrix)-1, color='blue', alpha=0.85, label="Solved by all")
 
     # 3.) The number of problems solved by the best strategy:
     numSolvedByBest = max(rowSums)
-    plt.vlines(numSolvedByBest, 0, len(matrix)-1, color='orange', alpha=0.7, label="Solved by best")
+    plt.vlines(numSolvedByBest, 0, len(matrix)-1, color='orange', alpha=0.85, label="Solved by best")
 
 
-    otherColors = cycle(['yellow', 'indigo', 'green', 'chartreuse', 'magenta', 'cyan', 'pink', 'grey', 'black'])
+    otherColors = cycle(['yellow', 'indigo', 'chartreuse', 'magenta', 'cyan', 'pink', 'grey', 'black', 'dodgerblue'])
     for k,v in extraVlines.items():
-        plt.vlines(v, 0, len(matrix)-1, color=next(otherColors), alpha=0.7, label=k)
+        plt.vlines(v, 0, len(matrix)-1, color=next(otherColors), alpha=0.85, label=k)
 
 
     plt.tick_params(axis='both', which='minor', labelsize=7)
@@ -156,7 +156,6 @@ def plotHeatmap(matrix, aspect, extraVlines={}):
 
 
 
-
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('prefix', help="prefix for ECallerHistories to glob for")
@@ -174,6 +173,11 @@ if __name__ == "__main__":
     else:
         histFiles = glob(f"./ECallerHistory/{args.prefix}[0-9]*")
         name = lambda x: os.path.split(x)[1]
-        hists = {name(x):ECallerHistory.load(name(x), keysToDeleteFromInfos={"stdout", "stderr", "states", "actions", "rewards"}) for x in track(histFiles)}
+        # hists = {name(x):ECallerHistory.load(name(x), keysToDeleteFromInfos={"stdout", "stderr", "states", "actions", "rewards"}) for x in track(histFiles)}
+        # load in parallel:
+
+        from joblib import Parallel, delayed
+        hists = Parallel(n_jobs=10)(delayed(ECallerHistory.load)(name(x), keysToDeleteFromInfos={"stdout", "stderr", "states", "actions", "rewards"}) for x in histFiles)
+
         hists = mergeHists(hists)
         plotHeatmap(makeHeatmap(args, hists), args.aspect, extraVlines=extraVlines)
