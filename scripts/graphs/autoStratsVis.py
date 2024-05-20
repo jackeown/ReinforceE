@@ -116,20 +116,21 @@ def plotHeatmap(matrix, aspect, extraVlines={}):
     # Vertical lines for showing:
     # 1.) The number of problems solved by no strategy.
     numSolvedByNone = np.sum(np.sum(matrix, axis=0) == 0) 
-    plt.vlines(len(matrix[0]) - numSolvedByNone, 0, len(matrix)-1, color='green', alpha=0.7, label="AutoAll")
+    # thin lines using keyword arg: lin
+    plt.vlines(len(matrix[0]) - numSolvedByNone, 0, len(matrix)-1, color='green', alpha=0.7, label="AutoAll",linewidth=1)
 
     # 2.) The number of problems solved by all strategies.
     numSolvedByAll = np.sum(np.sum(matrix, axis=0) == len(matrix))
-    plt.vlines(numSolvedByAll, 0, len(matrix)-1, color='blue', alpha=0.85, label="Solved by all")
+    plt.vlines(numSolvedByAll, 0, len(matrix)-1, color='blue', alpha=0.85, label="Solved by all", linewidth=1)
 
     # 3.) The number of problems solved by the best strategy:
     numSolvedByBest = max(rowSums)
-    plt.vlines(numSolvedByBest, 0, len(matrix)-1, color='orange', alpha=0.85, label="Solved by best")
+    plt.vlines(numSolvedByBest, 0, len(matrix)-1, color='orange', alpha=0.85, label="Solved by best", linewidth=1)
 
 
     otherColors = cycle(['yellow', 'indigo', 'chartreuse', 'magenta', 'cyan', 'pink', 'grey', 'black', 'dodgerblue'])
     for k,v in extraVlines.items():
-        plt.vlines(v, 0, len(matrix)-1, color=next(otherColors), alpha=0.85, label=k)
+        plt.vlines(v, 0, len(matrix)-1, color=next(otherColors), alpha=0.85, label=k, linewidth=1)
 
 
     plt.tick_params(axis='both', which='minor', labelsize=7)
