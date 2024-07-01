@@ -365,11 +365,11 @@ if __name__ == "__main__":
         for name, toSummarize in zip(stratNames, strats):
             summary = summarizeStrats(toSummarize)
             with open(f"{stratPath}/merged/{name}", "w") as f:
-                f.write(makeMasterStrat(summary, all_ones=False))
+                f.write(serializeStrat(makeMasterStrat(summary, all_ones=False)))
             
             allOnesName = name.split(".strat")[0] + "_allOnes.strat"
             with open(f"{stratPath}/merged/{allOnesName}", "w") as f:
-                f.write(makeMasterStrat(summary, all_ones=True))
+                f.write(serializeStrat(makeMasterStrat(summary, all_ones=True)))
 
 
 
