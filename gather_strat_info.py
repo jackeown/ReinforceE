@@ -357,7 +357,22 @@ if __name__ == "__main__":
         collectStrats(foldPath, ePath, stratPath, args.schedule)
 
     stratNames, strats = parseStrats(stratPath, args.schedule)
-    # IPython.embed()
+
+    # Make mini master strats for each problem's 
+    # strategies from its schedule
+    if args.schedule:
+        os.makedirs(f"{stratPath}/merged", exist_ok=True)
+        for name, toSummarize in zip(stratNames, strats):
+            summary = summarizeStrats(toSummarize)
+            with open(f"{stratPath}/merged/{name}", "w") as f:
+                f.write(makeMasterStrat(summary, all_ones=False))
+            
+            allOnesName = name.split(".strat")[0] + "_allOnes.strat"
+            with open(f"{stratPath}/merged/{allOnesName}", "w") as f:
+                f.write(makeMasterStrat(summary, all_ones=True))
+
+
+
     summary = summarizeStrats(strats)
 
     if args.makeCommonHeuristic:
@@ -378,22 +393,13 @@ if __name__ == "__main__":
         plotStrats(strats, stratPath.split("/")[-1])
 
     if args.makeMaster:
-        if args.schedule:
-            with open(f"{stratPath}/MASTER_Schedule.strat", "w") as f:
-                print("Writing master strategy to", f.name)
-                f.write(serializeStrat(makeMasterStrat(deepcopy(summary), all_ones=False)))
+        with open(f"{stratPath}/MASTER.strat", "w") as f:
+            print("Writing master strategy to", f.name)
+            f.write(serializeStrat(makeMasterStrat(deepcopy(summary), all_ones=False)))
 
-            with open(f"{stratPath}/MASTER_Schedule_RoundRobin.strat", "w") as f:
-                print("Writing master strategy (all_ones) to", f.name)
-                f.write(serializeStrat(makeMasterStrat(deepcopy(summary), all_ones=True)))
-        else:
-            with open(f"{stratPath}/MASTER.strat", "w") as f:
-                print("Writing master strategy to", f.name)
-                f.write(serializeStrat(makeMasterStrat(deepcopy(summary), all_ones=False)))
-
-            with open(f"{stratPath}/MASTER_RoundRobin.strat", "w") as f:
-                print("Writing master strategy (all_ones) to", f.name)
-                f.write(serializeStrat(makeMasterStrat(deepcopy(summary), all_ones=True)))
+        with open(f"{stratPath}/MASTER_RoundRobin.strat", "w") as f:
+            print("Writing master strategy (all_ones) to", f.name)
+            f.write(serializeStrat(makeMasterStrat(deepcopy(summary), all_ones=True)))
 
     if args.makeMasterSuccess:
         successStratNames, successStrats = parseStrats(stratPath, run=args.makeMasterSuccess)
