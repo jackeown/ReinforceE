@@ -84,34 +84,65 @@ def collectStrats(probsPath, eproverPath, stratsPath, schedule):
             if prob:
                 failures.append(prob)
 
-def parseStrat(stratFile):
-    with open(stratFile) as f:
-        lines = f.readlines()
-        lines = [l for l in lines if not l.startswith("#") and len(l.strip()) > 1]
-    strat = {k.strip():v.strip() for k,v in [l.split(":") for l in lines]}
-    assert len(strat) == len(lines) # There should be no duplicate keys.
+def parseStrat(stratFile, schedule):
 
-    for k,v in strat.items():
+
+    def parseKeyVal(k,v):
         if v == "true":
-            strat[k] = True
+            return True
         elif v == "false":
-            strat[k] = False
+            return False
         elif v.startswith('"') and v.endswith('"'):
-            strat[k] = v[1:-1]
+            return v[1:-1]
         else:
             try:
-                strat[k] = int(v)
+                return int(v)
             except:
                 try:
-                    strat[k] = float(v)
+                    return float(v)
                 except:
-                    pass
-    
-    if "heuristic_def" in strat:
-        strat["heuristic_def"] = re.findall(r"([0-9]+)[.*](\w+\([^\)]*\))", strat["heuristic_def"])
-        strat["heuristic_def"] = tuple(sorted([(int(w),f) for w,f in strat["heuristic_def"]]))
+                    return v
+                
+    def fixHeuristicDef(strat):
+        if "heuristic_def" in strat:
+            strat["heuristic_def"] = re.findall(r"([0-9]+)[.*](\w+\([^\)]*\))", strat["heuristic_def"])
+            strat["heuristic_def"] = tuple(sorted([(int(w),f) for w,f in strat["heuristic_def"]]))
 
-    return strat
+
+    if schedule:
+        # The file contains multiple strategies.
+        # Each strategy is preceded by a name and a newline
+        strats = []
+        with open(stratFile) as f:
+            lines = f.readlines()
+            strat = {}
+            for i in range(len(lines)):
+                if lines[i].startswith("strat name:"):
+                    if strat:
+                        fixHeuristicDef(strat)
+                        strats.append(strat)
+                    strat = {}
+                elif ":" in lines[i]:
+                    k,v = lines[i].strip().split(":")
+                    strat[k.strip()] = parseKeyVal(k.strip(),v.strip())
+        return strats
+
+
+
+    else:
+        with open(stratFile) as f:
+            lines = f.readlines()
+            lines = [l for l in lines if not l.startswith("#") and len(l.strip()) > 1]
+
+        strat = {k.strip():v.strip() for k,v in [l.split(":") for l in lines]}
+        assert len(strat) == len(lines) # There should be no duplicate keys.
+
+        for k,v in strat.items():
+            strat[k] = parseKeyVal(k,v)
+        
+        fixHeuristicDef(strat)
+
+        return strat
 
 
 def filterStratFilesByRun(stratFiles, run):
@@ -132,12 +163,13 @@ def filterStratFilesByRun(stratFiles, run):
     
     return [s for s in stratFiles if strat2Prob(s) in prob2Solved and prob2Solved[strat2Prob(s)]]
 
-def parseStrats(stratsPath, run=None):
-    print(f"Parsing {'all' if run is None else run} Strategies from {stratsPath}")
+def parseStrats(stratsPath, schedule=False, run=None):
+    print(f"Parsing {'all' if run is None else run} strategy files from {stratsPath}")
     stratFiles = glob(stratsPath + "/*.strat")
     stratFiles = stratFiles if run is None else filterStratFilesByRun(stratFiles, run)
-    stratFiles = [f for f in stratFiles if "MASTER" not in f and "common" not in f and "distilled" not in f]
-    parsed = [parseStrat(stratFile) for stratFile in track(stratFiles)]
+    isSpecialFile = lambda f: "common" in f or "distilled" in f or "MASTER" in f
+    stratFiles = [f for f in stratFiles if not isSpecialFile(f)]
+    parsed = [parseStrat(stratFile, schedule) for stratFile in track(stratFiles)]
     stratNames = [os.path.split(stratFile)[1] for stratFile in stratFiles]
     return stratNames, parsed
 
@@ -318,7 +350,7 @@ if __name__ == "__main__":
     if args.makeStrats:
         collectStrats(foldPath, ePath, stratPath, args.schedule)
 
-    stratNames, strats = parseStrats(stratPath)
+    stratNames, strats = parseStrats(stratPath, args.schedule)
     summary = summarizeStrats(strats)
 
     if args.makeCommonHeuristic:
