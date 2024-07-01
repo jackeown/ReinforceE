@@ -174,11 +174,17 @@ def parseStrats(stratsPath, schedule=False, run=None):
     return stratNames, parsed
 
 def summarizeStrats(strats):
+
+    # Flatten list of lists if strats come from schedules
+    if type(strats[0]) == list:
+        strats = sum(strats, []) 
+
     # Use counter to keep track of how many times each value appears for each key.
     masterDict = defaultdict(Counter)
     for strat in strats:
         for k,v in strat.items():
             masterDict[k][v] += 1
+            
     return masterDict
 
 
@@ -372,13 +378,22 @@ if __name__ == "__main__":
         plotStrats(strats, stratPath.split("/")[-1])
 
     if args.makeMaster:
-        with open(f"{stratPath}/MASTER.strat", "w") as f:
-            print("Writing master strategy to", f.name)
-            f.write(serializeStrat(makeMasterStrat(deepcopy(summary), all_ones=False)))
+        if args.schedule:
+            with open(f"{stratPath}/MASTER_Schedule.strat", "w") as f:
+                print("Writing master strategy to", f.name)
+                f.write(serializeStrat(makeMasterStrat(deepcopy(summary), all_ones=False)))
 
-        with open(f"{stratPath}/MASTER_RoundRobin.strat", "w") as f:
-            print("Writing master strategy (all_ones) to", f.name)
-            f.write(serializeStrat(makeMasterStrat(deepcopy(summary), all_ones=True)))
+            with open(f"{stratPath}/MASTER_Schedule_RoundRobin.strat", "w") as f:
+                print("Writing master strategy (all_ones) to", f.name)
+                f.write(serializeStrat(makeMasterStrat(deepcopy(summary), all_ones=True)))
+        else:
+            with open(f"{stratPath}/MASTER.strat", "w") as f:
+                print("Writing master strategy to", f.name)
+                f.write(serializeStrat(makeMasterStrat(deepcopy(summary), all_ones=False)))
+
+            with open(f"{stratPath}/MASTER_RoundRobin.strat", "w") as f:
+                print("Writing master strategy (all_ones) to", f.name)
+                f.write(serializeStrat(makeMasterStrat(deepcopy(summary), all_ones=True)))
 
     if args.makeMasterSuccess:
         successStratNames, successStrats = parseStrats(stratPath, run=args.makeMasterSuccess)
