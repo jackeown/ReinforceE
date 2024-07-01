@@ -42,41 +42,13 @@ def eliminateComments(stdout, removeHeuristicNames=True):
 
 failures = []
 
-# def collectStrats(probsPath, eproverPath, stratsPath):
-#     print(f"Collecting strats from {probsPath}")
-
-#     os.makedirs(stratsPath, exist_ok=True)
-#     probs = glob(f"{probsPath}/*/test/*.p")
-#     print(f"Running E on {len(probs)} problems")
-    
-#     t = 4
-#     print(f"Max time: {t}s * {len(probs)} = {t*len(probs)}s = {t*len(probs)/60}m = {t*len(probs)/60/60}h")
-#     for prob in track(probs):
-#         basename = os.path.basename(prob)
-
-#         # save stdout and only write to file if the process succeeds. ignore stderr
-#         try:
-#             p = subprocess.run([eproverPath, "--auto", "--print-strategy", f"--cpu-limit=60", prob], stdout=subprocess.PIPE, stderr=subprocess.PIPE, timeout=t)
-#             if p.returncode == 0:
-#                 with open(f"{stratsPath}/{basename}.strat", "w") as f:
-#                     f.write(eliminateComments(p.stdout.decode("utf-8")))
-#                     if len(p.stdout) < 100:
-#                         print(f"WARNING: {prob} has a small strategy.")
-#             else:
-#                 failures.append(prob)
-#                 print(f"WARNING: {prob} failed with return code {p.returncode}.")
-#         except subprocess.TimeoutExpired:
-#             failures.append(prob)
-#             print(f"WARNING: {prob} timed out.")
-        
-
-
 
 def run_eprover(prob_info):
-    eproverPath, t, prob, stratsPath = prob_info
+    eproverPath, t, prob, stratsPath, schedule = prob_info
     basename = os.path.basename(prob)
 
-    command = [eproverPath, "--auto", "--print-strategy", f"--cpu-limit={int(t*0.75)}", prob]
+    command = [eproverPath, "--auto-schedule" if schedule else "--auto", "--print-strategy", f"--cpu-limit={int(t*0.75)}", prob]
+
     try:
         p = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, timeout=t)
         if p.returncode == 0:
@@ -93,9 +65,7 @@ def run_eprover(prob_info):
 
     return (None, None)
 
-
-
-def collectStrats(probsPath, eproverPath, stratsPath):
+def collectStrats(probsPath, eproverPath, stratsPath, schedule):
     print(f"Collecting strats from {probsPath}")
 
     os.makedirs(stratsPath, exist_ok=True)
@@ -105,7 +75,7 @@ def collectStrats(probsPath, eproverPath, stratsPath):
     t = 60
     print(f"Max time: {t}s * {len(probs)} = {t*len(probs)}s = {t*len(probs)/60}m = {t*len(probs)/60/60}h")
 
-    prob_info_list = [(eproverPath, t, prob, stratsPath) for prob in probs]
+    prob_info_list = [(eproverPath, t, prob, stratsPath, schedule) for prob in probs]
     
     with Pool(20) as pool:
         for warning_message, prob in track(pool.imap_unordered(run_eprover, prob_info_list), total=len(probs)):
@@ -113,10 +83,6 @@ def collectStrats(probsPath, eproverPath, stratsPath):
                 print(warning_message)
             if prob:
                 failures.append(prob)
-
-
-
-
 
 def parseStrat(stratFile):
     with open(stratFile) as f:
@@ -148,9 +114,6 @@ def parseStrat(stratFile):
     return strat
 
 
-
-
-
 def filterStratFilesByRun(stratFiles, run):
     """Returns only the strat files for problems solved during the given run.
        run can also be a comma separated list of runs to accommodate the 5-fold cross validation.
@@ -169,7 +132,6 @@ def filterStratFilesByRun(stratFiles, run):
     
     return [s for s in stratFiles if strat2Prob(s) in prob2Solved and prob2Solved[strat2Prob(s)]]
 
-
 def parseStrats(stratsPath, run=None):
     print(f"Parsing {'all' if run is None else run} Strategies from {stratsPath}")
     stratFiles = glob(stratsPath + "/*.strat")
@@ -179,8 +141,6 @@ def parseStrats(stratsPath, run=None):
     stratNames = [os.path.split(stratFile)[1] for stratFile in stratFiles]
     return stratNames, parsed
 
-
-
 def summarizeStrats(strats):
     # Use counter to keep track of how many times each value appears for each key.
     masterDict = defaultdict(Counter)
@@ -188,7 +148,6 @@ def summarizeStrats(strats):
         for k,v in strat.items():
             masterDict[k][v] += 1
     return masterDict
-
 
 
 
@@ -235,6 +194,8 @@ def makeMasterStrat(summary, all_ones, instead=None, keepCommon="heuristic"):
     return master
 
 
+
+
 def unparse(k,v):
     if isinstance(v, bool):
         return "true" if v else "false"
@@ -243,7 +204,6 @@ def unparse(k,v):
     else:
         return str(v)
     
-
 def serializeStrat(summary):
     # Need to convert types back to strings (undoing what parseStrat did)
     # Also need to convert heuristic_def back to a string.
@@ -310,8 +270,6 @@ def plotStrats(strats, dataset, cutoff=5):
         plt.savefig(f"{folder}/{k}.png")
         plt.close()
 
-
-
 def stratSortKey(which):
 
     if which in [0,1]:
@@ -345,6 +303,7 @@ if __name__ == "__main__":
     parser.add_argument("--makeIncremental", action="store_true", help="makes a variant of each strat that is the merging of all strats that came before in the problem ordering. (for simulating Sledgehammer basically)")
     parser.add_argument("--makePlots", action="store_true")
     parser.add_argument("--ipython", action="store_true")
+    parser.add_argument("--schedule", action="store_true", help="use --auto-schedule instead of --auto (and assume multiple strategies in each problem's strat file.)")
     args = parser.parse_args()
 
     foldPath, ePath, stratPath = [
@@ -353,8 +312,11 @@ if __name__ == "__main__":
         ("/home/jack/Desktop/ATP/GCS/SLH-29/Folds", "eprover-ho", "strats/SLH-29")
     ][args.which]
 
+    if args.schedule:
+        stratPath = f"schedules/{stratPath}"
+
     if args.makeStrats:
-        collectStrats(foldPath, ePath, stratPath)
+        collectStrats(foldPath, ePath, stratPath, args.schedule)
 
     stratNames, strats = parseStrats(stratPath)
     summary = summarizeStrats(strats)
