@@ -351,6 +351,7 @@ if __name__ == "__main__":
         collectStrats(foldPath, ePath, stratPath, args.schedule)
 
     stratNames, strats = parseStrats(stratPath, args.schedule)
+    IPython.embed()
     summary = summarizeStrats(strats)
 
     if args.makeCommonHeuristic:
