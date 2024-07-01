@@ -184,7 +184,7 @@ def summarizeStrats(strats):
     for strat in strats:
         for k,v in strat.items():
             masterDict[k][v] += 1
-            
+
     return masterDict
 
 
@@ -357,7 +357,7 @@ if __name__ == "__main__":
         collectStrats(foldPath, ePath, stratPath, args.schedule)
 
     stratNames, strats = parseStrats(stratPath, args.schedule)
-    IPython.embed()
+    # IPython.embed()
     summary = summarizeStrats(strats)
 
     if args.makeCommonHeuristic:
