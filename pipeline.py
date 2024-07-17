@@ -14,9 +14,10 @@ MPTPStratFile =                 "--strat_file=/home/jack/Desktop/ReinforceE/stra
 MPTPStratFileRR =               "--strat_file=/home/jack/Desktop/ReinforceE/strats/MPTPTP2078/MASTER_RoundRobin.strat"
 MPTPSuccessStratFile =          "--strat_file=/home/jack/Desktop/ReinforceE/strats/MPTPTP2078/MASTERSuccess.strat"
 MPTPSuccessStratFileRR =        "--strat_file=/home/jack/Desktop/ReinforceE/strats/MPTPTP2078/MASTERSuccess_RoundRobin.strat"
+MPTPSchedStrats =               "--strat_file=/home/jack/Desktop/ReinforceE/schedules/strats/MPTPTP2078"
 
-MPT_CommonHeuristic_StratDir = "--strat_file=/home/jack/Desktop/ReinforceE/strats/MPTPTP2078/commonHeuristic"
-MPT_CommonElse_StratDir =      "--strat_file=/home/jack/Desktop/ReinforceE/strats/MPTPTP2078/commonElse"
+MPT_CommonHeuristic_StratDir =  "--strat_file=/home/jack/Desktop/ReinforceE/strats/MPTPTP2078/commonHeuristic"
+MPT_CommonElse_StratDir =       "--strat_file=/home/jack/Desktop/ReinforceE/strats/MPTPTP2078/commonElse"
 MPT_Incremental_StratDir =      "--strat_file=/home/jack/Desktop/ReinforceE/strats/MPTPTP2078/incremental"
 
 MPT_CPU_LIMIT = 60
@@ -28,6 +29,7 @@ SLHStratFile =                  "--strat_file=/home/jack/Desktop/ReinforceE/stra
 SLHStratFileRR =                "--strat_file=/home/jack/Desktop/ReinforceE/strats/SLH-29/MASTER_RoundRobin.strat"
 SLHSuccessStratFile =           "--strat_file=/home/jack/Desktop/ReinforceE/strats/SLH-29/MASTERSuccess.strat"
 SLHSuccessStratFileRR =         "--strat_file=/home/jack/Desktop/ReinforceE/strats/SLH-29/MASTERSuccess_RoundRobin.strat"
+SLHSchedStrats =                "--strat_file=/home/jack/Desktop/ReinforceE/schedules/strats/SLH-29"
 
 SLH_CommonHeuristic_StratDir =  "--strat_file=/home/jack/Desktop/ReinforceE/strats/SLH-29/commonHeuristic"
 SLH_CommonElse_StratDir =       "--strat_file=/home/jack/Desktop/ReinforceE/strats/SLH-29/commonElse"
@@ -42,6 +44,7 @@ VBTStratFile =                  "--strat_file=/home/jack/Desktop/ReinforceE/stra
 VBTStratFileRR =                "--strat_file=/home/jack/Desktop/ReinforceE/strats/VBT/MASTER_RoundRobin.strat"
 VBTSuccessStratFile =           "--strat_file=/home/jack/Desktop/ReinforceE/strats/VBT/MASTERSuccess.strat"
 VBTSuccessStratFileRR =         "--strat_file=/home/jack/Desktop/ReinforceE/strats/VBT/MASTERSuccess_RoundRobin.strat"
+VBTSchedStrats =                "--strat_file=/home/jack/Desktop/ReinforceE/schedules/strats/VBT"
 
 VBT_CommonHeuristic_StratDir =  "--strat_file=/home/jack/Desktop/ReinforceE/strats/VBT/commonHeuristic"
 VBT_CommonElse_StratDir =       "--strat_file=/home/jack/Desktop/ReinforceE/strats/VBT/commonElse"
@@ -136,9 +139,16 @@ test_experiments = [
 
 
     # MasterWeightedRoundRobin Experiments...
-    f'python tmux_magic_main.py --main_args="{common_flags} --test_num=1 {MPT_CPU_LIMIT_STR} --auto --policy_type=none --eprover_path=eprover_fair_round_robin {MPTPStratFile}" {MPTPPath} MPTMasterRR --test',
-    f'python tmux_magic_main.py --main_args="{common_flags} --test_num=1 {VBT_CPU_LIMIT_STR} --auto --policy_type=none --eprover_path=eprover_fair_round_robin {VBTStratFile}" {VBTPath} VBTMasterRR --test',
-    f'python tmux_magic_main.py --main_args="{common_flags} --test_num=1 {SLH_CPU_LIMIT_STR} --auto --policy_type=none --eprover_path=/home/jack/eprover/eprover_fair_round_robin/PROVER/eprover-ho {SLHStratFile}" {SLHPath} SLHMasterRR --test',
+    # f'python tmux_magic_main.py --main_args="{common_flags} --test_num=1 {MPT_CPU_LIMIT_STR} --auto --policy_type=none --eprover_path=eprover_fair_round_robin {MPTPStratFile}" {MPTPPath} MPTMasterRR --test',
+    # f'python tmux_magic_main.py --main_args="{common_flags} --test_num=1 {VBT_CPU_LIMIT_STR} --auto --policy_type=none --eprover_path=eprover_fair_round_robin {VBTStratFile}" {VBTPath} VBTMasterRR --test',
+    # f'python tmux_magic_main.py --main_args="{common_flags} --test_num=1 {SLH_CPU_LIMIT_STR} --auto --policy_type=none --eprover_path=/home/jack/eprover/eprover_fair_round_robin/PROVER/eprover-ho {SLHStratFile}" {SLHPath} SLHMasterRR --test',
+
+
+    # ScheduleMerging Experiments...
+    f'python tmux_magic_main.py --main_args="{common_flags} --test_num=1 {MPT_CPU_LIMIT_STR} --auto --policy_type=none --eprover_path=eprover {MPTPSchedStrats}" {MPTPPath} MPTSchedMerge --test',
+    f'python tmux_magic_main.py --main_args="{common_flags} --test_num=1 {VBT_CPU_LIMIT_STR} --auto --policy_type=none --eprover_path=eprover {VBTSchedStrats}" {VBTPath} VBTSchedMerge --test',
+    # f'python tmux_magic_main.py --main_args="{common_flags} --test_num=1 {SLH_CPU_LIMIT_STR} --auto --policy_type=none --eprover_path=eprover-ho {SLH_Incremental_StratDir}" {SLHPath} SLHRoundRobinIncremental --test',
+
 
 
 ]
