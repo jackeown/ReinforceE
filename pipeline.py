@@ -14,7 +14,7 @@ MPTPStratFile =                 "--strat_file=/home/jack/Desktop/ReinforceE/stra
 MPTPStratFileRR =               "--strat_file=/home/jack/Desktop/ReinforceE/strats/MPTPTP2078/MASTER_RoundRobin.strat"
 MPTPSuccessStratFile =          "--strat_file=/home/jack/Desktop/ReinforceE/strats/MPTPTP2078/MASTERSuccess.strat"
 MPTPSuccessStratFileRR =        "--strat_file=/home/jack/Desktop/ReinforceE/strats/MPTPTP2078/MASTERSuccess_RoundRobin.strat"
-MPTPSchedStrats =               "--strat_file=/home/jack/Desktop/ReinforceE/schedules/strats/MPTPTP2078"
+MPTPSchedStrats =               "--strat_file=/home/jack/Desktop/ReinforceE/schedules/strats/MPTPTP2078/merged"
 
 MPT_CommonHeuristic_StratDir =  "--strat_file=/home/jack/Desktop/ReinforceE/strats/MPTPTP2078/commonHeuristic"
 MPT_CommonElse_StratDir =       "--strat_file=/home/jack/Desktop/ReinforceE/strats/MPTPTP2078/commonElse"
@@ -29,7 +29,7 @@ SLHStratFile =                  "--strat_file=/home/jack/Desktop/ReinforceE/stra
 SLHStratFileRR =                "--strat_file=/home/jack/Desktop/ReinforceE/strats/SLH-29/MASTER_RoundRobin.strat"
 SLHSuccessStratFile =           "--strat_file=/home/jack/Desktop/ReinforceE/strats/SLH-29/MASTERSuccess.strat"
 SLHSuccessStratFileRR =         "--strat_file=/home/jack/Desktop/ReinforceE/strats/SLH-29/MASTERSuccess_RoundRobin.strat"
-SLHSchedStrats =                "--strat_file=/home/jack/Desktop/ReinforceE/schedules/strats/SLH-29"
+SLHSchedStrats =                "--strat_file=/home/jack/Desktop/ReinforceE/schedules/strats/SLH-29/merged"
 
 SLH_CommonHeuristic_StratDir =  "--strat_file=/home/jack/Desktop/ReinforceE/strats/SLH-29/commonHeuristic"
 SLH_CommonElse_StratDir =       "--strat_file=/home/jack/Desktop/ReinforceE/strats/SLH-29/commonElse"
@@ -44,7 +44,7 @@ VBTStratFile =                  "--strat_file=/home/jack/Desktop/ReinforceE/stra
 VBTStratFileRR =                "--strat_file=/home/jack/Desktop/ReinforceE/strats/VBT/MASTER_RoundRobin.strat"
 VBTSuccessStratFile =           "--strat_file=/home/jack/Desktop/ReinforceE/strats/VBT/MASTERSuccess.strat"
 VBTSuccessStratFileRR =         "--strat_file=/home/jack/Desktop/ReinforceE/strats/VBT/MASTERSuccess_RoundRobin.strat"
-VBTSchedStrats =                "--strat_file=/home/jack/Desktop/ReinforceE/schedules/strats/VBT"
+VBTSchedStrats =                "--strat_file=/home/jack/Desktop/ReinforceE/schedules/strats/VBT/merged"
 
 VBT_CommonHeuristic_StratDir =  "--strat_file=/home/jack/Desktop/ReinforceE/strats/VBT/commonHeuristic"
 VBT_CommonElse_StratDir =       "--strat_file=/home/jack/Desktop/ReinforceE/strats/VBT/commonElse"
