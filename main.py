@@ -333,7 +333,7 @@ def runE(policy, eproverPath, problemPath, state_dim=5, soft_cpu_limit=1, cpu_li
     if auto:
             command_args.append("--auto")
     elif auto_sched:
-            command_args.append("--auto-schedule")
+            command_args.append("--auto-schedule=8")
     
     command_args.append(problemPath)
 
