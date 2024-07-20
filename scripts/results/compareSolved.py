@@ -528,6 +528,8 @@ if __name__ == "__main__":
 
         "MasterRR": r"\_MasterWeightedRR",
         "StratOmnipotent": r"\_AutoAll",
+
+        "SchedMerge": r"\_SchedMerge",
     }
 
     def subFunc(runName):
