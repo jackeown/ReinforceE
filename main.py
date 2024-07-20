@@ -572,7 +572,7 @@ def makeRunner(policy, args):
     if args.lunar_lander:
         runner = functools.partial(runLunarLander, policy)
     else:
-        runner = functools.partial(runE, policy, args.eprover_path, state_dim=args.state_dim, strat_file=args.strat_file, soft_cpu_limit=args.soft_cpu_limit, cpu_limit=args.cpu_limit, auto=args.auto, verbose=args.verbose)
+        runner = functools.partial(runE, policy, args.eprover_path, state_dim=args.state_dim, strat_file=args.strat_file, soft_cpu_limit=args.soft_cpu_limit, cpu_limit=args.cpu_limit, auto=args.auto, auto_sched=args.auto_sched, verbose=args.verbose)
     return runner
     
 
