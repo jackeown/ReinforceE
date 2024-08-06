@@ -54,7 +54,7 @@ def nthMainCommands(args, i):
     commands = [
         "cd ~/Desktop/ReinforceE",
         "fish",
-        "ulimit -n 300000",
+        "ulimit -Sn 3000000",
         f"python main.py {args.main_args} {special_args}",
     ]
 

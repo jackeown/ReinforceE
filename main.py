@@ -1058,8 +1058,8 @@ if __name__ == "__main__":
     # Both forkserver and spawn break things :(
     # mp.set_start_method('forkserver')
 
-    # soft, hard = resource.getrlimit(resource.RLIMIT_NOFILE)
-    # resource.setrlimit(resource.RLIMIT_NOFILE, (100_000,100_000))
+    soft, hard = resource.getrlimit(resource.RLIMIT_NOFILE)
+    resource.setrlimit(resource.RLIMIT_NOFILE, (100_000,100_000))
 
     parser = argparse.ArgumentParser()
     parser.add_argument("--problems", default=os.path.expanduser("~/Desktop/ATP/GCS/MPTPTP2078/Bushy/Problems/"), help="path to where problems are stored")
