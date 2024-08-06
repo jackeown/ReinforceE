@@ -364,7 +364,7 @@ def runE(policy, eproverPath, problemPath, state_dim=5, soft_cpu_limit=1, cpu_li
         timed_out = not communicate_with_timeout(policy, workerId, state_dim, p, int(cpu_limit*1.5))
 
     # Finish reading E's stdout/stderr
-    thread.join()
+    thread.join(cpu_limit+1)
     stdout,stderr = result[0]
     t2 = time()
 
