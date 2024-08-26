@@ -7,6 +7,7 @@ from rich.progress import track
 from rich.table import Table
 import matplotlib.pyplot as plt
 from copy import copy
+import IPython
 
 # import geometric mean:
 from scipy.stats.mstats import gmean as geomean
@@ -172,7 +173,7 @@ def buildSmallerTables(hists, subFunc=lambda x: x):
             ])
         except ZeroDivisionError:
             print(f"Zero Division Error: {key}")
-            exit(1)
+            IPython.embed()
     
     rows = sorted(rows, key=lambda x: x[1], reverse=False)
     for run, processed, processedVSAuto in rows:
