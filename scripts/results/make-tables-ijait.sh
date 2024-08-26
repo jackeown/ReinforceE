@@ -25,7 +25,7 @@ for ds in "${datasets[@]}"; do
         ${ds}RoundRobinAllOnes ${ds}RoundRobin ${ds}SuccessRoundRobin \
         ${ds}MasterRR \
         ${ds}CommonHeuristic ${ds}CommonElse \
-        ${ds}Auto ${ds}AutoSched ${ds}AutoAll > ~/Desktop/ReinforceE/latexTables/${ds}_ijait.tex
+        ${ds}Auto ${ds}AutoSched ${ds}StratOmnipotent > ~/Desktop/ReinforceE/latexTables/${ds}_ijait.tex
 done
 echo "Finished!"
 
