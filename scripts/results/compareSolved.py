@@ -476,6 +476,20 @@ if __name__ == "__main__":
     
     sys.argv = [x for x in sys.argv if x not in ["--median", "--mean", "--logMean"]]
 
+
+    if "--iwil" in sys.argv:
+        iwil = True
+        sys.argv = [x for x in sys.argv if x != "--iwil"]
+    else:
+        iwil = False
+
+    if "--ijait" in sys.argv:
+        ijait = True
+        sys.argv = [x for x in sys.argv if x != "--ijait"]
+    else:
+        ijait = False
+
+
     if "--cv" in sys.argv:
         CV = True
         sys.argv = [x for x in sys.argv if x != "--cv"]
@@ -493,18 +507,6 @@ if __name__ == "__main__":
         CV = False
         hists = {x: ECallerHistory.load(x) for x in track(sys.argv[1:], description="Loading Histories")}
     
-    if "--iwil" in sys.argv:
-        iwil = True
-        sys.argv = [x for x in sys.argv if x != "--iwil"]
-    else:
-        iwil = False
-
-    if "--ijait" in sys.argv:
-        ijait = True
-        sys.argv = [x for x in sys.argv if x != "--ijait"]
-    else:
-        ijait = False
-
 
 
     sub = {
