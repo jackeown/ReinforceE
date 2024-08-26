@@ -13,6 +13,7 @@
 # Auto = Auto
 # AutoSched = AutoSched
 # AutoAll = StratOmnipotent
+# MasterIncremental = MasterIncremental
 
 
 # define datasets "MPT", "VBT", "SLH" in bash array for loop:
@@ -23,7 +24,7 @@ for ds in "${datasets[@]}"; do
     echo "Making ${ds} tables / figures"
     ~/.pyenv/shims/python scripts/results/compareSolved.py --cv --ijait \
         ${ds}RoundRobinAllOnes ${ds}RoundRobin ${ds}SuccessRoundRobin \
-        ${ds}MasterRR \
+        ${ds}MasterRR ${ds}MasterIncremental \
         ${ds}CommonHeuristic ${ds}CommonElse \
         ${ds}Auto ${ds}AutoSched ${ds}StratOmnipotent > ~/Desktop/ReinforceE/latexTables/${ds}_ijait.tex
 done
