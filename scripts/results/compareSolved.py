@@ -164,11 +164,15 @@ def buildSmallerTables(hists, subFunc=lambda x: x):
     for key in track(sys.argv[1:], description="Building Processed Table"):
         processed = procCounts[key]
         # processedVSAuto = compareProcessed(processed, procCounts[autoKey])
-        rows.append([
-            subFunc(key),
-            centralTendency([processed[k] for k in probsSolvedByAll if k in processed]),
-            mean([processed[k] for k in probsSolvedByAll if k in processed]),
-        ])
+        try:
+            rows.append([
+                subFunc(key),
+                centralTendency([processed[k] for k in probsSolvedByAll if k in processed]),
+                mean([processed[k] for k in probsSolvedByAll if k in processed]),
+            ])
+        except ZeroDivisionError:
+            print(f"Zero Division Error: {key}")
+            exit(1)
     
     rows = sorted(rows, key=lambda x: x[1], reverse=False)
     for run, processed, processedVSAuto in rows:
