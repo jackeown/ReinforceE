@@ -20,7 +20,7 @@ datasets=("MPT" "VBT" "SLH")
 
 # define experiments similarly:
 for ds in "${datasets[@]}"; do
-    echo "Making ${dataset} tables / figures"
+    echo "Making ${ds} tables / figures"
     ~/.pyenv/shims/python scripts/results/compareSolved.py --cv --ijait \
         ${ds}RoundRobinAllOnes ${ds}RoundRobin ${ds}SuccessRoundRobin \
         ${ds}MasterRR \
