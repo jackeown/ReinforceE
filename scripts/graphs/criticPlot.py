@@ -86,6 +86,7 @@ if __name__ == "__main__":
     for problem in track(problems, description=f"Getting Critic Evaluations for {len(problems)} problems"):
         evals = getCriticEvaluation(model, hist, problem, seed=args.seed)
         print(evals.shape, end=' and ')
+        print(evals.min(), evals.max())
         plt.plot(evals[0][:max_len], label=problem, color=randomColor(hist.history[problem][0]['solved']), alpha=args.opacity)
     
     plt.xlabel("Clauses Processed")
