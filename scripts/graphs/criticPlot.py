@@ -92,7 +92,7 @@ if __name__ == "__main__":
     plt.xlabel("Clauses Processed")
     plt.ylabel("Critic Evaluation")
     plt.xlim(0, max_len)
-    plt.ylim(0,0.3)
+    # plt.ylim(0,0.3)
 
     if args.legend:
         plt.legend()
