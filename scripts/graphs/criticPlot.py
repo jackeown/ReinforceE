@@ -90,9 +90,12 @@ if __name__ == "__main__":
         solved = hist.history[problem][0]['solved']
         plt.plot(evals[0][:max_len], label=problem, color=randomColor(solved), alpha=args.opacity)
         if solved:
-            successEvals.append(evals[0][:max_len])
+            # need to pad to max_len with the last value:
+            evalsPadded = torch.cat((evals[0], torch.tensor([evals[0][-1]]).repeat(max_len - len(evals[0]))))
+            successEvals.append(evalsPadded)
         else:
-            failEvals.append(evals[0][:max_len])
+            evalsPadded = torch.cat((evals[0], torch.tensor([evals[0][-1]]).repeat(max_len - len(evals[0]))))
+            failEvals.append(evalsPadded)
 
     averageSuccessEvals = sum(successEvals) / len(successEvals)
     averageFailEvals = sum(failEvals) / len(failEvals)
