@@ -429,13 +429,14 @@ class PolicyNet(nn.Module):
 
         self.hook = nn.Linear(newIndim, outDim)
 
-        self.c = Critic(newIndim, 100, 1)
+        self.critic = None
+        # self.c = Critic(newIndim, 100, 1)
         # self.critic = lambda s, x: c(s.preprocess(x))
 
-    def critic(self, x):
-        if x.shape[-1] > 5:
-            x = self.preprocess(x)
-        return self.c(x)
+    # def critic(self, x):
+    #     if x.shape[-1] > 5:
+    #         x = self.preprocess(x)
+    #     return self.c(x)
         
 
     def preprocess(self, s, verbose=False):
