@@ -82,12 +82,29 @@ if __name__ == "__main__":
     # sort problems so all solved ones come last:
     problems.sort(key=lambda x: hist.history[x][0]['solved'], reverse=False)
 
-
+    successEvals, failEvals = None, None
     for problem in track(problems, description=f"Getting Critic Evaluations for {len(problems)} problems"):
         evals = getCriticEvaluation(model, hist, problem, seed=args.seed)
         print(evals.shape, end=' and ')
         print(evals.min(), evals.max())
-        plt.plot(evals[0][:max_len], label=problem, color=randomColor(hist.history[problem][0]['solved']), alpha=args.opacity)
+        solved = hist.history[problem][0]['solved']
+        plt.plot(evals[0][:max_len], label=problem, color=randomColor(solved), alpha=args.opacity)
+        if solved:
+            if successEvals is None:
+                successEvals = evals
+            else:
+                successEvals = torch.cat((successEvals, evals), 1)
+        else:
+            if failEvals is None:
+                failEvals = evals
+            else:
+                failEvals = torch.cat((failEvals, evals), 1)
+
+    if successEvals is not None and failEvals is not None:
+        averageSuccessEvals = successEvals.mean(1)
+        averageFailEvals = failEvals.mean(1)
+        plt.plot(averageSuccessEvals, label="Solved", color="green", alpha=1)
+        plt.plot(averageFailEvals, label="Unsolved", color="red", alpha=1)
     
     plt.xlabel("Clauses Processed")
     plt.ylabel("Critic Evaluation")
