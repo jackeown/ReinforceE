@@ -86,7 +86,7 @@ if __name__ == "__main__":
     
     solvedEvals = []
     unsolvedEvals = []
-    track = lambda x: x # for debug
+    track = lambda x, *args, **kwargs: x
     for problem in track(problems, description=f"Getting Critic Evaluations for {len(problems)} problems"):
         evals = getCriticEvaluation(model, hist, problem, seed=args.seed)[0][:max_len]
         if hist.history[problem][0]['solved']:
