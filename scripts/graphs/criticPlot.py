@@ -91,10 +91,16 @@ if __name__ == "__main__":
         plt.plot(evals[0][:max_len], label=problem, color=randomColor(solved), alpha=args.opacity)
         if solved:
             # need to pad to max_len with the last value:
-            evalsPadded = torch.cat((evals[0], torch.tensor([evals[0][-1]]).repeat(max_len - len(evals[0]))))
+            if len(evals[0]) < max_len:
+                evalsPadded = torch.cat((evals[0], torch.tensor([evals[0][-1]]).repeat(max_len - len(evals[0]))))
+            else:
+                evalsPadded = evals[0][:max_len]
             successEvals.append(evalsPadded)
         else:
-            evalsPadded = torch.cat((evals[0], torch.tensor([evals[0][-1]]).repeat(max_len - len(evals[0]))))
+            if len(evals[0]) < max_len:
+                evalsPadded = torch.cat((evals[0], torch.tensor([evals[0][-1]]).repeat(max_len - len(evals[0]))))
+            else:
+                evalsPadded = evals[0][:max_len]
             failEvals.append(evalsPadded)
 
     averageSuccessEvals = sum(successEvals) / len(successEvals)
