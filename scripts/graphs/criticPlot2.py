@@ -30,6 +30,12 @@ def getRandomProblems(hist, numProblems=10, seed=0, criteria=lambda x: True):
 
 def getCriticEvaluation(model, hist, problem, seed=0):
     info = hist.history[problem][0]
+    
+    # for backward compatibility with older runs:
+    if not hasattr(model, 'c'):
+        criticPytorch = model.critic
+        model.critic = lambda s, x: criticPytorch(s.preprocess(x))
+
     return model.critic(normalizeState(info['states']).float()).detach().T
 
 
