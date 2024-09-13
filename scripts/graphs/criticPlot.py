@@ -51,6 +51,25 @@ def randomColor(solved=False):
     return 'green' if solved else 'red'
 
 
+def carefulMean(evals):
+    """Compute the component-wise average of a list of 1D tensors of varying lengths."""
+
+    max_length = max(t.size(0) for t in evals)
+    sum_values = torch.zeros(max_length)
+    count_values = torch.zeros(max_length)
+
+    for t in evals:
+        length = t.size(0)
+        sum_values[:length] += t
+        count_values[:length] += 1
+
+    mean_values = sum_values / count_values
+    mean_values[count_values == 0] = 0  # Handle division by zero for positions with no data
+
+    return mean_values
+
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser("Creates a plot of the critic evaluations over the course of a proof search")
     parser.add_argument("model", help="The model name(s) (i.e MPTNN1)")
@@ -63,7 +82,7 @@ if __name__ == "__main__":
     parser.add_argument("--opacity", type=float, default=0.4)
     args = parser.parse_args()
 
-
+    min_len = 100
     max_len = 2_000
 
     print(f"Loading History '{args.run}'")
@@ -76,7 +95,7 @@ if __name__ == "__main__":
         problems = args.problem.split(",")
     else:
         print(f"Selecting {args.numProblems} random problems")
-        problems = getRandomProblems(hist, numProblems=args.numProblems, seed=args.seed, criteria=hasAtLeastNStates(400))
+        problems = getRandomProblems(hist, numProblems=args.numProblems, seed=args.seed, criteria=hasAtLeastNStates(min_len))
 
     
     # sort problems so all solved ones come last:
@@ -90,21 +109,13 @@ if __name__ == "__main__":
         solved = hist.history[problem][0]['solved']
         plt.plot(evals[0][:max_len], label=problem, color=randomColor(solved), alpha=args.opacity)
         if solved:
-            # need to pad to max_len with the last value:
-            if len(evals[0]) < max_len:
-                evalsPadded = torch.cat((evals[0], torch.tensor([evals[0][-1]]).repeat(max_len - len(evals[0]))))
-            else:
-                evalsPadded = evals[0][:max_len]
-            successEvals.append(evalsPadded)
+            successEvals.append(evals[0])
         else:
-            if len(evals[0]) < max_len:
-                evalsPadded = torch.cat((evals[0], torch.tensor([evals[0][-1]]).repeat(max_len - len(evals[0]))))
-            else:
-                evalsPadded = evals[0][:max_len]
-            failEvals.append(evalsPadded)
+            failEvals.append(evals[0])
 
-    averageSuccessEvals = sum(successEvals) / len(successEvals)
-    averageFailEvals = sum(failEvals) / len(failEvals)
+
+    averageSuccessEvals = carefulMean(successEvals)
+    averageFailEvals = carefulMean(failEvals)
     plt.plot(averageSuccessEvals, label="Solved", color="green", alpha=1)
     plt.plot(averageFailEvals, label="Unsolved", color="red", alpha=1)
 

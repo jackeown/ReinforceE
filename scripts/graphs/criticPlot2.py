@@ -56,6 +56,24 @@ def randomColor(solved=False):
     return 'green' if solved else 'red'
 
 
+
+def carefulMean(evals):
+    """Compute the component-wise average of a list of 1D tensors of varying lengths."""
+
+    max_length = max(t.size(0) for t in evals)
+    sum_values = torch.zeros(max_length)
+    count_values = torch.zeros(max_length)
+
+    for t in evals:
+        length = t.size(0)
+        sum_values[:length] += t
+        count_values[:length] += 1
+
+    mean_values = sum_values / count_values
+    mean_values[count_values == 0] = 0  # Handle division by zero for positions with no data
+
+    return mean_values
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser("Creates a plot of the critic evaluations over the course of a proof search")
     parser.add_argument("model", help="The model name(s) (i.e MPTNN1)")
@@ -68,7 +86,7 @@ if __name__ == "__main__":
     parser.add_argument("--opacity", type=float, default=0.5)
     args = parser.parse_args()
 
-
+    min_len = 100
     max_len = 2_000
 
     print(f"Loading History '{args.run}'")
@@ -81,7 +99,7 @@ if __name__ == "__main__":
         problems = args.problem.split(",")
     else:
         print(f"Selecting {args.numProblems} random problems")
-        problems = getRandomProblems(hist, numProblems=args.numProblems, seed=args.seed, criteria=hasAtLeastNStates(max_len))
+        problems = getRandomProblems(hist, numProblems=args.numProblems, seed=args.seed, criteria=hasAtLeastNStates(min_len))
 
     
     solvedEvals = []
@@ -90,12 +108,12 @@ if __name__ == "__main__":
     for problem in track(problems, description=f"Getting Critic Evaluations for {len(problems)} problems"):
         evals = getCriticEvaluation(model, hist, problem, seed=args.seed)[0][:max_len]
         if hist.history[problem][0]['solved']:
-            solvedEvals.append(evals)
+            solvedEvals.append(evals[0])
         else:
-            unsolvedEvals.append(evals)
+            unsolvedEvals.append(evals[0])
     
-    averageSolvedEvals = sum(solvedEvals) / len(solvedEvals)
-    averageUnsolvedEvals = sum(unsolvedEvals) / len(unsolvedEvals)
+    averageSolvedEvals = carefulMean(solvedEvals)
+    averageUnsolvedEvals = carefulMean(unsolvedEvals)
     diff = averageSolvedEvals - averageUnsolvedEvals
     plt.plot(diff, color="black", alpha=args.opacity)
     plt.plot([0,max_len],[0,0], color='grey', alpha=args.opacity)
