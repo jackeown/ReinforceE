@@ -108,9 +108,9 @@ if __name__ == "__main__":
     for problem in track(problems, description=f"Getting Critic Evaluations for {len(problems)} problems"):
         evals = getCriticEvaluation(model, hist, problem, seed=args.seed)[0][:max_len]
         if hist.history[problem][0]['solved']:
-            solvedEvals.append(evals[0])
+            solvedEvals.append(evals)
         else:
-            unsolvedEvals.append(evals[0])
+            unsolvedEvals.append(evals)
     
     averageSolvedEvals = carefulMean(solvedEvals)
     averageUnsolvedEvals = carefulMean(unsolvedEvals)
